@@ -8,7 +8,7 @@ const shopRoutes = require('./routes/shop')
 // INIT APP
 const app = express()
 const port = process.env.PORT || 3000
-app.set('view engine', 'pug') // views directory set by default
+app.set('view engine', 'ejs') // views directory set by default
 
 // MIDDLEWARE
 app.use(express.static(path.join(__dirname, 'public')))
