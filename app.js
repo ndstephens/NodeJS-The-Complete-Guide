@@ -11,10 +11,10 @@ const port = process.env.PORT || 3000
 app.use(express.urlencoded({ extended: true }))
 
 // ROUTERS
-app.use(adminRoutes)
+app.use('/admin', adminRoutes)
 app.use(shopRoutes)
 
-// 404 ERROR PAGE
+// 404 ERROR PAGE -- Catch All
 app.use((req, res, next) => {
   res.status(404).send(`<h1>Page not Found</h1>`)
 })
