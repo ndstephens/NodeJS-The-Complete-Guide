@@ -14,8 +14,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 
 // ROUTERS
+app.use('/', shopRoutes)
 app.use('/admin', adminRoutes)
-app.use(shopRoutes)
 
 // 404 ERROR PAGE -- Catch All
 app.use((req, res, next) => {
