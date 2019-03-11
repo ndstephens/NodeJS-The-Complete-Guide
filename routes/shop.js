@@ -10,6 +10,7 @@ router.get('/', (req, res, next) => {
   // res.sendFile(path.join(rootDir, 'views', 'shop.html'))
   res.render('shop', {
     pageTitle: 'Shop',
+    activeTab: 'shop',
     products,
   })
 })
