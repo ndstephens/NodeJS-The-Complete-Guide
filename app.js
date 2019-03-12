@@ -2,7 +2,7 @@ const path = require('path')
 
 const express = require('express')
 
-const { adminRoutes } = require('./routes/admin')
+const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 
 // INIT APP
