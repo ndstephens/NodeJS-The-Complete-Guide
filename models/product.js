@@ -6,10 +6,10 @@ const rootDir = require('../utils/rootDir')
 const p = path.join(rootDir, 'data', 'products.json')
 
 module.exports = class Product {
-  constructor({ title = '', imageUrl = '', price = 0, desc = '' } = {}) {
+  constructor({ title, imageUrl, price, desc } = {}) {
     this.title = title.trim()
-    this.imageUrl = imageUrl.trim()
-    this.price = parseInt(price).toFixed(2)
+    this.imageUrl = imageUrl.trim() || 'https://picsum.photos/300/300/?random'
+    this.price = price || '0.00'
     this.desc = desc.trim()
   }
 
