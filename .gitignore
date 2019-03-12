@@ -1,3 +1,6 @@
+# PROJECT SPECIFIC
+data/*.*
+
 # Logs
 logs
 *.log
