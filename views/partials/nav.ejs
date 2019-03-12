@@ -4,11 +4,34 @@
       <li class="main-header__item">
         <a href="/" class="<%= activeTab === 'shop' ? 'active' : '' %>">Shop</a>
       </li>
+
+      <li class="main-header__item">
+        <a
+          href="/products"
+          class="<%= activeTab === 'products' ? 'active' : '' %>"
+          >Products</a
+        >
+      </li>
+
+      <li class="main-header__item">
+        <a href="/cart" class="<%= activeTab === 'cart' ? 'active' : '' %>"
+          >Cart</a
+        >
+      </li>
+
       <li class="main-header__item">
         <a
           href="/admin/add-product"
-          class="<%= activeTab === 'admin' ? 'active' : '' %>"
+          class="<%= activeTab === 'admin-add' ? 'active' : '' %>"
           >Add Product</a
+        >
+      </li>
+
+      <li class="main-header__item">
+        <a
+          href="/admin/products"
+          class="<%= activeTab === 'admin-products' ? 'active' : '' %>"
+          >Admin Products</a
         >
       </li>
     </ul>
