@@ -1,9 +1,10 @@
 const path = require('path')
 
 const express = require('express')
+const { get404 } = require('./controllers/404')
 
-const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
+const adminRoutes = require('./routes/admin')
 
 // INIT APP
 const app = express()
@@ -19,10 +20,7 @@ app.use('/', shopRoutes)
 app.use('/admin', adminRoutes)
 
 // 404 ERROR PAGE -- Catch All
-app.use((req, res, next) => {
-  // res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
-  res.status(404).render('404', { pageTitle: 'Page Not Found' })
-})
+app.use(get404)
 
 // RUN SERVER
 app.listen(port)
