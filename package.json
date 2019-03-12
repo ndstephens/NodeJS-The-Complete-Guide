@@ -9,6 +9,11 @@
   },
   "author": "Nate Stephens <ndstephens@gmail.com>",
   "license": "MIT",
+  "nodemonConfig": {
+    "ignore": [
+      "data/"
+    ]
+  },
   "devDependencies": {
     "nodemon": "^1.18.10"
   },
