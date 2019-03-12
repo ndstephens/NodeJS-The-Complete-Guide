@@ -23,8 +23,11 @@ module.exports = class Product {
 
   static fetchAll(cb) {
     fs.readFile(p, (err, data) => {
-      if (err) return cb([])
-      cb(JSON.parse(data.toString()))
+      if (err) {
+        cb([])
+      } else {
+        cb(JSON.parse(data.toString()))
+      }
     })
   }
 }
