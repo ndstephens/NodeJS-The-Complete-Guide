@@ -3,7 +3,7 @@ const path = require('path')
 const express = require('express')
 const { getAddProduct, postAddProduct } = require('../controllers/products')
 
-//? /admin
+//? ------ '/admin'
 const router = express.Router()
 
 router.get('/add-product', getAddProduct)
