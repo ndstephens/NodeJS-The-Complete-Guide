@@ -25,9 +25,16 @@ exports.getListProducts = (req, res, next) => {
 }
 
 exports.getEditProduct = (req, res, next) => {
-  res.render('admin/edit-product', {
-    pageTitle: 'Admin Edit Product',
-    activeTab: 'admin-edit',
-    editMode: true,
+  Product.findById(req.params.productId, product => {
+    if (!product) {
+      next()
+    } else {
+      res.render('admin/edit-product', {
+        pageTitle: 'Admin Edit Product',
+        activeTab: 'admin-edit',
+        editMode: true,
+        product,
+      })
+    }
   })
 }

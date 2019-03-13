@@ -7,30 +7,52 @@
     <%- include('../partials/nav.ejs') %>
 
     <main>
-      <form class="product-form" action="/admin/add-product" method="POST">
+      <form
+        class="product-form"
+        action="/admin/<%= editMode ? 'edit-product' : 'add-product' %>"
+        method="POST">
         <!-- TITLE -->
         <div class="form-control">
           <label for="title">Title</label>
-          <input type="text" name="title" id="title" autofocus />
+          <input
+            type="text"
+            name="title"
+            id="title"
+            value="<%= editMode ? product.title : '' %>"
+            autofocus />
         </div>
         <!-- IMAGE URL -->
         <div class="form-control">
           <label for="imageUrl">Image URL</label>
-          <input type="text" name="imageUrl" id="imageUrl" />
+          <input
+            type="text"
+            name="imageUrl"
+            id="imageUrl"
+            value="<%= editMode ? product.imageUrl : '' %>" />
         </div>
         <!-- PRICE -->
         <div class="form-control">
           <label for="price">Price</label>
-          <input type="number" name="price" id="price" step="0.01" />
+          <input
+            type="number"
+            name="price"
+            id="price"
+            step="0.01"
+            value="<%= editMode ? +product.price : '' %>" />
         </div>
         <!-- DESCRIPTION -->
         <div class="form-control">
           <label for="desc">Description</label>
-          <textarea name="desc" id="desc" rows="5"></textarea>
+          <textarea
+            name="desc"
+            id="desc"
+            rows="5"><%= editMode ? product.desc : '' %></textarea>
         </div>
 
         <!-- SUBMIT BUTTON -->
-        <button class="btn" type="submit">Add Product</button>
+        <button class="btn" type="submit">
+          <%= editMode ? 'Update Product' : 'Add Product' %>
+        </button>
       </form>
     </main>
 
