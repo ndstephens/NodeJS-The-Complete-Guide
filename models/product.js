@@ -6,6 +6,16 @@ const rootDir = require('../utils/rootDir')
 
 const prodPath = path.join(rootDir, 'data', 'products.json')
 
+const getProductsFromFile = cb => {
+  fs.readFile(prodPath, (err, data) => {
+    if (err) {
+      cb([])
+    } else {
+      cb(JSON.parse(data.toString()))
+    }
+  })
+}
+
 module.exports = class Product {
   constructor({ title, imageUrl, price, desc, id = uuidv4() } = {}) {
     this.title = title.trim()
@@ -17,10 +27,7 @@ module.exports = class Product {
 
   // Also used for updating
   save() {
-    fs.readFile(prodPath, (err, data) => {
-      let products = []
-      // populate products list from file if no errors
-      if (!err) products = JSON.parse(data.toString())
+    getProductsFromFile(products => {
       // check if product instance calling this method already exists (and is attempting an update)
       const productIndex = products.findIndex(p => p.id === this.id)
       if (productIndex !== -1) {
@@ -35,42 +42,26 @@ module.exports = class Product {
   }
 
   static fetchAll(cb) {
-    fs.readFile(prodPath, (err, data) => {
-      if (err) {
-        cb([])
-      } else {
-        cb(JSON.parse(data.toString()))
-      }
-    })
+    getProductsFromFile(cb)
   }
 
   static findById(id, cb) {
-    fs.readFile(prodPath, (err, data) => {
-      if (err) {
-        cb(undefined)
-      } else {
-        const product = JSON.parse(data.toString()).find(p => p.id === id)
-        cb(product)
-      }
+    getProductsFromFile(products => {
+      const product = products.find(p => p.id === id)
+      cb(product)
     })
   }
 
   static deleteById(id, cb) {
-    fs.readFile(prodPath, (err, data) => {
-      if (err) {
-        cb(err)
-      } else {
-        const filteredProducts = JSON.parse(data.toString()).filter(
-          p => p.id !== id
-        )
-        fs.writeFile(prodPath, JSON.stringify(filteredProducts), err => {
-          if (err) {
-            console.log(err)
-          } else {
-            cb()
-          }
-        })
-      }
+    getProductsFromFile(products => {
+      const filteredProducts = products.filter(p => p.id !== id)
+      fs.writeFile(prodPath, JSON.stringify(filteredProducts), err => {
+        if (!err) {
+          cb()
+        } else {
+          console.log(err)
+        }
+      })
     })
   }
 }
