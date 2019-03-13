@@ -46,3 +46,13 @@ exports.postEditProduct = (req, res, next) => {
   product.save()
   res.redirect('/admin/list-products')
 }
+
+exports.postDeleteProduct = (req, res, next) => {
+  Product.deleteById(req.body.productId, err => {
+    if (err) {
+      next()
+    } else {
+      res.redirect('/admin/list-products')
+    }
+  })
+}
