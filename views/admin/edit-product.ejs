@@ -38,7 +38,7 @@
             name="price"
             id="price"
             step="0.01"
-            value="<%= editMode ? +product.price : '' %>" />
+            value="<%= editMode ? parseFloat(product.price).toFixed(2) : '' %>" />
         </div>
         <!-- DESCRIPTION -->
         <div class="form-control">
@@ -48,6 +48,10 @@
             id="desc"
             rows="5"><%= editMode ? product.desc : '' %></textarea>
         </div>
+        <!-- ID -- only used for editing -->
+        <% if (editMode) { %>
+        <input type="hidden" name="id" value="<%= product.id %>">
+        <% } %>
 
         <!-- SUBMIT BUTTON -->
         <button class="btn" type="submit">

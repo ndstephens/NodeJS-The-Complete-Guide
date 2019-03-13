@@ -38,3 +38,11 @@ exports.getEditProduct = (req, res, next) => {
     }
   })
 }
+
+exports.postEditProduct = (req, res, next) => {
+  // create new Product from updated info
+  const product = new Product(req.body)
+  // save method has logic to update Product in list if id already exists
+  product.save()
+  res.redirect('/admin/list-products')
+}
