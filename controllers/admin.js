@@ -1,15 +1,15 @@
 const Product = require('../models/product')
 
 exports.getAddProduct = (req, res, next) => {
-  res.render('admin/add-product', {
+  res.render('admin/edit-product', {
     pageTitle: 'Admin Add Product',
     activeTab: 'admin-add',
+    editMode: false,
   })
 }
 
 exports.postAddProduct = (req, res, next) => {
   const product = new Product(req.body)
-  console.log('Product:', product)
   product.save()
   res.redirect('/')
 }
@@ -21,5 +21,13 @@ exports.getListProducts = (req, res, next) => {
       activeTab: 'admin-list',
       products,
     })
+  })
+}
+
+exports.getEditProduct = (req, res, next) => {
+  res.render('admin/edit-product', {
+    pageTitle: 'Admin Edit Product',
+    activeTab: 'admin-edit',
+    editMode: true,
   })
 }

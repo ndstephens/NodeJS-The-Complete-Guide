@@ -5,6 +5,7 @@ const {
   getAddProduct,
   postAddProduct,
   getListProducts,
+  getEditProduct,
 } = require('../controllers/admin')
 
 //? ------ '/admin'
@@ -15,5 +16,7 @@ router.get('/add-product', getAddProduct)
 router.post('/add-product', postAddProduct)
 
 router.get('/list-products', getListProducts)
+
+router.get('/edit-product/:productId', getEditProduct)
 
 module.exports = router
