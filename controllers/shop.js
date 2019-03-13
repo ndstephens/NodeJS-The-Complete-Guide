@@ -1,4 +1,5 @@
 const Product = require('../models/product')
+const Cart = require('../models/cart')
 
 exports.getIndex = (req, res, next) => {
   Product.fetchAll(products => {
@@ -43,20 +44,9 @@ exports.getCart = (req, res, next) => {
 }
 
 exports.postCart = (req, res, next) => {
-  const { productId } = req.body
-  Product.findById(productId, product => {
-    if (!product) {
-      next() // caught by 404
-    } else {
-      // add to Cart model
-      // display cart page
-      res.render('shop/cart', {
-        pageTitle: 'Cart',
-        activeTab: 'cart',
-        product,
-      })
-    }
-  })
+  const product = JSON.parse(req.body.product)
+  Cart.addProduct(product)
+  res.redirect('/cart')
 }
 
 exports.getOrders = (req, res, next) => {
