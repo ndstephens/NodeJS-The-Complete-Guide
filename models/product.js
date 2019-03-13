@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
+const uuidv4 = require('uuid/v4')
 const rootDir = require('../utils/rootDir')
 
 const p = path.join(rootDir, 'data', 'products.json')
@@ -11,6 +12,7 @@ module.exports = class Product {
     this.imageUrl = imageUrl.trim() || 'https://picsum.photos/300/300/?random'
     this.price = price || '0.00'
     this.desc = desc.trim()
+    this.id = uuidv4()
   }
 
   save() {
