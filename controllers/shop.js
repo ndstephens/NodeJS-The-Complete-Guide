@@ -20,6 +20,21 @@ exports.getProducts = (req, res, next) => {
   })
 }
 
+exports.getProduct = (req, res, next) => {
+  const productId = req.params.productId
+  Product.findById(productId, product => {
+    if (!product) {
+      next() // caught by 404
+    } else {
+      res.render('shop/product-detail', {
+        pageTitle: 'Product Detail',
+        activeTab: 'products',
+        product,
+      })
+    }
+  })
+}
+
 exports.getCart = (req, res, next) => {
   res.render('shop/cart', {
     pageTitle: 'Cart',

@@ -1,0 +1,21 @@
+<%- include('../partials/head.ejs') %>
+  </head>
+
+  <body>
+    <%- include('../partials/nav.ejs') %>
+
+    <main class="centered">
+      <h1><%= product.title %></h1>
+      <hr>
+      <div>
+        <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
+      </div>
+      <h2><%= product.price %></h2>
+      <p><%= product.desc %></p>
+
+      <form action="/cart" method="post">
+        <button type="submit" class="btn">Add to Cart</button>
+      </form>
+    </main>
+
+<%- include('../partials/end.ejs') %>
