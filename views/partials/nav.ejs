@@ -49,34 +49,44 @@
 
 <nav class="mobile-nav">
   <ul class="mobile-nav__item-list">
+    <!-- SHOP -->
     <li class="mobile-nav__item">
-      <a class="<%= path === '/' ? 'active' : '' %>" href="/">Shop</a>
+      <a class="<%= activeTab === 'shop' ? 'active' : '' %>" href="/">Shop</a>
     </li>
+    <!-- PRODUCTS -->
     <li class="mobile-nav__item">
-      <a class="<%= path === '/products' ? 'active' : '' %>" href="/products"
+      <a
+        class="<%= activeTab === 'products' ? 'active' : '' %>"
+        href="/products"
         >Products</a
       >
     </li>
+    <!-- CART -->
     <li class="mobile-nav__item">
-      <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+      <a class="<%= activeTab === 'cart' ? 'active' : '' %>" href="/cart"
+        >Cart</a
+      >
     </li>
+    <!-- ORDERS -->
     <li class="mobile-nav__item">
-      <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders"
+      <a class="<%= activeTab === 'orders' ? 'active' : '' %>" href="/orders"
         >Orders</a
       >
     </li>
+    <!-- ADMIN ADD PRODUCT -->
     <li class="mobile-nav__item">
       <a
-        class="<%= path === '/admin/add-product' ? 'active' : '' %>"
+        class="<%= activeTab === 'admin-add' ? 'active' : '' %>"
         href="/admin/add-product"
         >Add Product
       </a>
     </li>
+    <!-- ADMIN LIST PRODUCTS -->
     <li class="mobile-nav__item">
       <a
-        class="<%= path === '/admin/products' ? 'active' : '' %>"
-        href="/admin/products"
-        >Admin Products
+        class="<%= activeTab === 'admin-list' ? 'active' : '' %>"
+        href="/admin/list-products"
+        >List Products
       </a>
     </li>
   </ul>
