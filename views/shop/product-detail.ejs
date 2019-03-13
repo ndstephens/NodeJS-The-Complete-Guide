@@ -13,9 +13,7 @@
       <h2><%= product.price %></h2>
       <p><%= product.desc %></p>
 
-      <form action="/cart" method="post">
-        <button type="submit" class="btn">Add to Cart</button>
-      </form>
+      <%- include('../partials/add-to-cart.ejs', {product}) %>
     </main>
 
 <%- include('../partials/end.ejs') %>
