@@ -27,17 +27,15 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const { productId } = req.params
-  Product.findById(productId, product => {
-    if (!product) {
-      next() // caught by 404
-    } else {
+  Product.findById(productId)
+    .then(([[product]]) => {
       res.render('shop/product-detail', {
         pageTitle: 'Product Detail',
         activeTab: 'products',
         product,
       })
-    }
-  })
+    })
+    .catch(err => console.log(err))
 }
 
 exports.getCart = (req, res, next) => {
