@@ -1,4 +1,5 @@
 const Product = require('../models/product')
+const Cart = require('../models/cart')
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
@@ -44,6 +45,7 @@ exports.postEditProduct = (req, res, next) => {
   const product = new Product(req.body)
   // save method has logic to update Product in list if id already exists
   product.save()
+  Cart.updateCartItem(product)
   res.redirect('/admin/list-products')
 }
 

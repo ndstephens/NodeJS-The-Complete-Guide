@@ -26,25 +26,36 @@ module.exports = class Cart {
     }, 0)
   }
 
-  static addProduct({ id, price } = {}) {
+  static addProduct(product) {
     getCartFromFile(cart => {
       // Analyze cart -> find existing product
-      const existingProduct = cart.products.find(p => p.id === id)
+      const existingProduct = cart.products.find(p => p.id === product.id)
       // Add or update product
       if (existingProduct) {
         existingProduct.qty++
       } else {
-        cart.products.push({
-          id,
-          price,
-          qty: 1,
-        })
+        cart.products.push({ ...product, qty: 1 })
       }
       // Update cart's totalPrice
       cart.totalPrice = this.updateTotalPrice(cart)
 
       // Update the cart JSON file
       fs.writeFile(cartPath, JSON.stringify(cart), err => console.log(err))
+    })
+  }
+
+  static updateCartItem(updatedProduct) {
+    getCartFromFile(cart => {
+      // if cart contains a product that was updated, then update it in the cart
+      if (cart.products.some(p => p.id === updatedProduct.id)) {
+        cart.products.forEach((product, i) => {
+          if (product.id === updatedProduct.id) {
+            cart.products[i] = { ...product, ...updatedProduct }
+          }
+        })
+        cart.totalPrice = this.updateTotalPrice(cart)
+        fs.writeFile(cartPath, JSON.stringify(cart), err => console.log(err))
+      }
     })
   }
 }
