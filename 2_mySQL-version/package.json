@@ -1,0 +1,27 @@
+{
+  "name": "nodejs-complete-guide",
+  "version": "0.1.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "Nate Stephens <ndstephens@gmail.com>",
+  "license": "MIT",
+  "nodemonConfig": {
+    "ignore": [
+      "data/"
+    ]
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "pug": "^2.0.3",
+    "uuid": "^3.3.2"
+  }
+}
