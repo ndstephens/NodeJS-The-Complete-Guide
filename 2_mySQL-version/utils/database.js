@@ -11,7 +11,6 @@
 
 const Sequelize = require('sequelize')
 
-// @ts-ignore
 const sequelize = new Sequelize(
   process.env.MYSQL_DB_NAME,
   process.env.MYSQL_LOGIN_NAME,
