@@ -18,9 +18,11 @@
     "nodemon": "^1.18.10"
   },
   "dependencies": {
+    "dotenv": "^7.0.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.2",
+    "mysql2": "^1.6.5",
     "pug": "^2.0.3",
     "uuid": "^3.3.2"
   }
