@@ -11,13 +11,11 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const product = new Product(req.body)
-  product.save(err => {
-    if (err) {
-      next()
-    } else {
-      res.redirect('/')
-    }
-  })
+  console.log('Product:', product)
+  product
+    .save()
+    .then(() => res.redirect('/'))
+    .catch(err => console.log(err))
 }
 
 exports.getListProducts = (req, res, next) => {

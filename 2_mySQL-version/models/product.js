@@ -19,28 +19,20 @@
 const db = require('../utils/database')
 
 module.exports = class Product {
-  constructor({ title, imageUrl, price, desc, id } = {}) {
+  constructor({ title, imageUrl, price, description } = {}) {
     this.title = title.trim()
     this.imageUrl = imageUrl.trim() || 'https://picsum.photos/300/300/?random'
     this.price = parseFloat(price).toFixed(2) || '0.00'
-    this.desc = desc.trim()
-    this.id = id
+    this.description = description.trim()
+    // this.id = id
   }
 
   // Also used for updating
-  save(cb) {
-    // getProductsFromFile(products => {
-    //   // check if product instance calling this method already exists (and is attempting an update)
-    //   const productIndex = products.findIndex(p => p.id === this.id)
-    //   if (productIndex !== -1) {
-    //     // if found, update product
-    //     products[productIndex] = this
-    //   } else {
-    //     // otherwise add new Product to list
-    //     products.push(this)
-    //   }
-    //   fs.writeFile(prodPath, JSON.stringify(products), err => cb(err))
-    // })
+  save() {
+    return db.execute(
+      'INSERT INTO products (title, price, description, imageUrl) VALUES (?, ?, ?, ?)',
+      [this.title, this.price, this.description, this.imageUrl]
+    )
   }
 
   static fetchAll() {
