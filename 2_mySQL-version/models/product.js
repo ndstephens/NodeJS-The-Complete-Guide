@@ -1,32 +1,30 @@
-const db = require('../utils/database')
+const Sequelize = require('sequelize')
 
-module.exports = class Product {
-  constructor({ title, imageUrl, price, description } = {}) {
-    this.title = title.trim()
-    this.imageUrl = imageUrl.trim() || 'https://picsum.photos/300/300/?random'
-    this.price = parseFloat(price).toFixed(2) || '0.00'
-    this.description = description.trim()
-  }
+const sequelize = require('../utils/database')
 
-  save() {
-    return db.execute(
-      'INSERT INTO products (title, price, description, imageUrl) VALUES (?, ?, ?, ?)',
-      [this.title, this.price, this.description, this.imageUrl]
-    )
-  }
+const Product = sequelize.define('product', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  price: {
+    type: Sequelize.DOUBLE,
+    allowNull: false,
+  },
+  imageUrl: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+})
 
-  static fetchAll() {
-    return db.execute('SELECT * FROM products')
-  }
-
-  static findById(id) {
-    return db.execute('SELECT * FROM products WHERE products.id = ?', [id])
-  }
-
-  static deleteById(id, cb) {
-    // getProductsFromFile(products => {
-    //   const filteredProducts = products.filter(p => p.id !== id)
-    //   fs.writeFile(prodPath, JSON.stringify(filteredProducts), err => cb(err))
-    // })
-  }
-}
+module.exports = Product
