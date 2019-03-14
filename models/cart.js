@@ -28,9 +28,9 @@ module.exports = class Cart {
 
   static addProduct(product) {
     getCartFromFile(cart => {
-      // Analyze cart -> find existing product
+      // Find if product already exists in cart
       const existingProduct = cart.products.find(p => p.id === product.id)
-      // Add or update product
+      // If exists, update quantity, otherwise add to cart
       if (existingProduct) {
         existingProduct.qty++
       } else {
@@ -38,7 +38,6 @@ module.exports = class Cart {
       }
       // Update cart's totalPrice
       cart.totalPrice = this.updateTotalPrice(cart)
-
       // Update the cart JSON file
       fs.writeFile(cartPath, JSON.stringify(cart), err => console.log(err))
     })
@@ -46,7 +45,7 @@ module.exports = class Cart {
 
   static updateCartItem(updatedProduct) {
     getCartFromFile(cart => {
-      // if cart contains a product that was updated, then update it in the cart
+      // Check if cart contains item before attempting update
       if (cart.products.some(p => p.id === updatedProduct.id)) {
         cart.products.forEach((product, i) => {
           if (product.id === updatedProduct.id) {
