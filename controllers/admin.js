@@ -11,8 +11,13 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const product = new Product(req.body)
-  product.save()
-  res.redirect('/')
+  product.save(err => {
+    if (err) {
+      next()
+    } else {
+      res.redirect('/')
+    }
+  })
 }
 
 exports.getListProducts = (req, res, next) => {
@@ -44,17 +49,34 @@ exports.postEditProduct = (req, res, next) => {
   // create new Product from updated info
   const product = new Product(req.body)
   // save method has logic to update Product in list if id already exists
-  product.save()
-  Cart.updateCartItem(product)
-  res.redirect('/admin/list-products')
-}
-
-exports.postDeleteProduct = (req, res, next) => {
-  Product.deleteById(req.body.productId, err => {
+  product.save(err => {
     if (err) {
       next()
     } else {
-      res.redirect('/admin/list-products')
+      Cart.updateCartItem(product, err => {
+        if (err) {
+          next()
+        } else {
+          res.redirect('/admin/list-products')
+        }
+      })
+    }
+  })
+}
+
+exports.postDeleteProduct = (req, res, next) => {
+  const { productId } = req.body
+  Product.deleteById(productId, err => {
+    if (err) {
+      next()
+    } else {
+      Cart.deleteCartItem(productId, err => {
+        if (err) {
+          next()
+        } else {
+          res.redirect('/admin/list-products')
+        }
+      })
     }
   })
 }

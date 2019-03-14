@@ -26,7 +26,7 @@ module.exports = class Cart {
     }, 0)
   }
 
-  static addProduct(product) {
+  static addProduct(product, cb) {
     getCartFromFile(cart => {
       // Find if product already exists in cart
       const existingProduct = cart.products.find(p => p.id === product.id)
@@ -39,11 +39,11 @@ module.exports = class Cart {
       // Update cart's totalPrice
       cart.totalPrice = this.updateTotalPrice(cart)
       // Update the cart JSON file
-      fs.writeFile(cartPath, JSON.stringify(cart), err => console.log(err))
+      fs.writeFile(cartPath, JSON.stringify(cart), err => cb(err))
     })
   }
 
-  static updateCartItem(updatedProduct) {
+  static updateCartItem(updatedProduct, cb) {
     getCartFromFile(cart => {
       // Check if cart contains item before attempting update
       if (cart.products.some(p => p.id === updatedProduct.id)) {
@@ -53,7 +53,23 @@ module.exports = class Cart {
           }
         })
         cart.totalPrice = this.updateTotalPrice(cart)
-        fs.writeFile(cartPath, JSON.stringify(cart), err => console.log(err))
+        fs.writeFile(cartPath, JSON.stringify(cart), err => cb(err))
+      } else {
+        cb()
+      }
+    })
+  }
+
+  static deleteCartItem(productId, cb) {
+    getCartFromFile(cart => {
+      // Check if cart contains item before attempting delete
+      if (cart.products.some(p => p.id === productId)) {
+        const updatedCart = {}
+        updatedCart.products = cart.products.filter(p => p.id !== productId)
+        updatedCart.totalPrice = this.updateTotalPrice(updatedCart)
+        fs.writeFile(cartPath, JSON.stringify(updatedCart), err => cb(err))
+      } else {
+        cb()
       }
     })
   }

@@ -26,7 +26,7 @@ module.exports = class Product {
   }
 
   // Also used for updating
-  save() {
+  save(cb) {
     getProductsFromFile(products => {
       // check if product instance calling this method already exists (and is attempting an update)
       const productIndex = products.findIndex(p => p.id === this.id)
@@ -37,7 +37,7 @@ module.exports = class Product {
         // otherwise add new Product to list
         products.push(this)
       }
-      fs.writeFile(prodPath, JSON.stringify(products), err => console.log(err))
+      fs.writeFile(prodPath, JSON.stringify(products), err => cb(err))
     })
   }
 
@@ -55,13 +55,7 @@ module.exports = class Product {
   static deleteById(id, cb) {
     getProductsFromFile(products => {
       const filteredProducts = products.filter(p => p.id !== id)
-      fs.writeFile(prodPath, JSON.stringify(filteredProducts), err => {
-        if (!err) {
-          cb()
-        } else {
-          console.log(err)
-        }
-      })
+      fs.writeFile(prodPath, JSON.stringify(filteredProducts), err => cb(err))
     })
   }
 }

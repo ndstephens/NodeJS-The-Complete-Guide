@@ -45,8 +45,13 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const product = JSON.parse(req.body.product)
-  Cart.addProduct(product)
-  res.redirect('/cart')
+  Cart.addProduct(product, err => {
+    if (err) {
+      next()
+    } else {
+      res.redirect('/cart')
+    }
+  })
 }
 
 exports.getOrders = (req, res, next) => {
