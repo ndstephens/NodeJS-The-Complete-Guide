@@ -26,6 +26,10 @@ module.exports = class Cart {
     }, 0)
   }
 
+  static getCartContents(cb) {
+    getCartFromFile(cb)
+  }
+
   static addProduct(product, cb) {
     getCartFromFile(cart => {
       // Find if product already exists in cart
