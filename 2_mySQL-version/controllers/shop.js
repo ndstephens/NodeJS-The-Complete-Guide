@@ -79,24 +79,18 @@ exports.postCart = (req, res, next) => {
     })
     .then(() => res.redirect('/cart'))
     .catch(err => console.log(err))
-
-  // Cart.addProduct(product, err => {
-  //   if (err) {
-  //     next()
-  //   } else {
-  //     res.redirect('/cart')
-  //   }
-  // })
 }
 
 exports.postCartDeleteItem = (req, res, next) => {
-  Cart.deleteCartItem(req.body.productId, err => {
-    if (err) {
-      next()
-    } else {
-      res.redirect('/cart')
-    }
-  })
+  const { productId } = req.body
+  req.user
+    .getCart()
+    .then(cart => cart.getProducts({ where: { id: productId } }))
+    .then(([product = undefined] = []) => {
+      return product.cartItem.destroy()
+    })
+    .then(() => res.redirect('/cart'))
+    .catch(err => console.log(err))
 }
 
 exports.getOrders = (req, res, next) => {
