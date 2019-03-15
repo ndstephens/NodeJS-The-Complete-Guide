@@ -26,6 +26,14 @@ app.set('view engine', 'ejs')
 //* MIDDLEWARE
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then(user => {
+      req.user = user
+      next()
+    })
+    .catch(err => console.log(err))
+})
 
 //* ROUTERS
 app.use('/', shopRoutes)
@@ -41,8 +49,19 @@ User.hasMany(Product)
 //* RUN SERVER
 // Create/Sync database tables with the Models you created
 sequelize
-  .sync({ force: true })
+  // .sync({ force: true })
+  .sync()
   .then(() => {
+    return User.findByPk(1)
+  })
+  .then(user => {
+    if (!user) {
+      return User.create({ name: 'Nate', email: 'nate@email.com' })
+    }
+    return user
+  })
+  .then(user => {
+    // console.log(user)
     app.listen(port)
   })
   .catch(err => console.log(err))
