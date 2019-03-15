@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use((req, res, next) => {
   User.findByPk(1)
     .then(user => {
-      req.user = user
+      req.user = user // attach user to the request body for access within app
       next()
     })
     .catch(err => console.log(err))

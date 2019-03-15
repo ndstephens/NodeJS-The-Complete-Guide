@@ -24,7 +24,9 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getListProducts = (req, res, next) => {
-  Product.findAll()
+  // Product.findAll()
+  req.user
+    .getProducts()
     .then(products => {
       res.render('admin/list-products', {
         pageTitle: 'Admin List Products',
@@ -36,8 +38,10 @@ exports.getListProducts = (req, res, next) => {
 }
 
 exports.getEditProduct = (req, res, next) => {
-  Product.findByPk(req.params.productId)
-    .then(product => {
+  // Product.findByPk(req.params.productId)
+  req.user
+    .getProducts({ where: { id: req.params.productId } })
+    .then(([product]) => {
       res.render('admin/edit-product', {
         pageTitle: 'Admin Edit Product',
         activeTab: 'admin-edit',
@@ -64,7 +68,9 @@ exports.postEditProduct = (req, res, next) => {
 }
 
 exports.postDeleteProduct = (req, res, next) => {
-  Product.findByPk(req.body.id)
+  // Product.findByPk(req.body.id)
+  req.user
+    .getProducts({ where: { id: req.body.id } })
     .then(product => {
       return product.destroy()
       // delete in Cart as well
