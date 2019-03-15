@@ -56,14 +56,36 @@ exports.getCart = (req, res, next) => {
 }
 
 exports.postCart = (req, res, next) => {
-  const product = JSON.parse(req.body.product)
-  Cart.addProduct(product, err => {
-    if (err) {
-      next()
-    } else {
-      res.redirect('/cart')
-    }
-  })
+  const { id: productId } = JSON.parse(req.body.product)
+  let fetchedCart
+  req.user
+    .getCart()
+    .then(cart => {
+      fetchedCart = cart
+      return cart.getProducts({ where: { id: productId } })
+    })
+    .then(([product = undefined] = []) => {
+      if (product) {
+        //
+      }
+      return Product.findByPk(productId)
+        .then(product => {
+          return fetchedCart.addProduct(product, {
+            through: { quantity: 1 },
+          })
+        })
+        .then(() => res.redirect('/cart'))
+        .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
+
+  // Cart.addProduct(product, err => {
+  //   if (err) {
+  //     next()
+  //   } else {
+  //     res.redirect('/cart')
+  //   }
+  // })
 }
 
 exports.postCartDeleteItem = (req, res, next) => {

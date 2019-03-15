@@ -66,6 +66,6 @@ sequelize
     }
     return user
   })
-  .then(user => user.createCart()) // create dummy cart
+  // .then(user => user.createCart()) // create dummy cart
   .then(() => app.listen(port))
   .catch(err => console.log(err))
