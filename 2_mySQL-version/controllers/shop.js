@@ -40,15 +40,19 @@ exports.getProduct = (req, res, next) => {
 }
 
 exports.getCart = (req, res, next) => {
-  Cart.getCartContents(cart => {
-    const { products, totalPrice } = cart
-    res.render('shop/cart', {
-      pageTitle: 'Cart',
-      activeTab: 'cart',
-      products,
-      totalPrice,
+  req.user
+    .getCart()
+    .then(cart => {
+      return cart.getProducts()
     })
-  })
+    .then(products => {
+      res.render('shop/cart', {
+        pageTitle: 'Cart',
+        activeTab: 'cart',
+        products,
+      })
+    })
+    .catch(err => console.log(err))
 }
 
 exports.postCart = (req, res, next) => {
