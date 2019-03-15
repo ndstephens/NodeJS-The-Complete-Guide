@@ -1,5 +1,5 @@
 <%- include('../partials/head.ejs') %>
-    <link rel="stylesheet" href="/css/product.css" />
+    <link rel="stylesheet" href="/css/cart.css" />
   </head>
 
   <body>
@@ -7,38 +7,18 @@
 
     <main>
       <% if (products.length > 0) { %>
-      <div class="grid">
-        <% for (let product of products) { %>
-        <article class="card product-item">
-          <header class="card__header">
-            <h1 class="product__title"><%= product.title %></h1>
-          </header>
-
-          <div class="card__image">
-            <img src="<%= product.imageUrl %>" alt="<%= product.title %>" />
-          </div>
-
-          <div class="card__content">
-            <h2 class="product__price">$<%= product.price %></h2>
-            <p class="product__description">
-              <%= product.description %>
-            </p>
-          </div>
-
-          <div class="card__actions">
-            <!-- <a href="/products/<%= product.id %>" class="btn">Details</a> -->
-            <form action="/cart-delete-item" method="post">
-              <button type="submit" class="btn">Remove</button>
-              <input type="hidden" name="productId" value="<%= product.id %>" />
-            </form>
-          </div>
-
-          <div>
-            Quantity: <%= product.cartItem.quantity %>
-          </div>
-        </article>
-        <% } %>
-      </div>
+        <ul class="cart__item-list">
+          <% products.forEach(product => { %>
+            <li class="cart__item">
+              <h1><%= product.title %></h1>
+              <h2>Quantity: <%= product.cartItem.quantity %></h2>
+              <form action="/cart-delete-item" method="POST">
+                <input type="hidden" value="<%= product.id %>" name="productId">
+                <button class="btn danger" type="submit">Delete</button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
       <% } else { %>
       <h1>Cart is Empty</h1>
       <% } %>
