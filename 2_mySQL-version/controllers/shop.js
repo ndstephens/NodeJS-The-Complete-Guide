@@ -65,18 +65,19 @@ exports.postCart = (req, res, next) => {
       return cart.getProducts({ where: { id: productId } })
     })
     .then(([product = undefined] = []) => {
-      if (product) {
-        //
-      }
-      return Product.findByPk(productId)
-        .then(product => {
+      if (!product) {
+        return Product.findByPk(productId).then(product => {
           return fetchedCart.addProduct(product, {
             through: { quantity: 1 },
           })
         })
-        .then(() => res.redirect('/cart'))
-        .catch(err => console.log(err))
+      }
+      const { quantity: qty } = product.cartItem
+      return fetchedCart.addProduct(product, {
+        through: { quantity: qty + 1 },
+      })
     })
+    .then(() => res.redirect('/cart'))
     .catch(err => console.log(err))
 
   // Cart.addProduct(product, err => {
