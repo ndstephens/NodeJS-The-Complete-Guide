@@ -12,6 +12,8 @@ const adminRoutes = require('./routes/admin')
 //? MODELS
 const Product = require('./models/product')
 const User = require('./models/user')
+const Cart = require('./models/cart')
+const CartItem = require('./models/cart-item')
 
 //*--------------------------------------------------/
 //*           INITIALIZE APP
@@ -42,9 +44,15 @@ app.use('/admin', adminRoutes)
 //* 404 ERROR PAGE -- Catch All
 app.use(get404)
 
-//* ASSOCIATE TABLES/MODELS IN DB
+//* TABLE/MODEL ASSOCIATIONS
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' })
 User.hasMany(Product)
+
+Cart.belongsTo(User)
+User.hasOne(Cart)
+
+Cart.belongsToMany(Product, { through: CartItem })
+Product.belongsToMany(Cart, { through: CartItem })
 
 //* RUN SERVER
 // Create/Sync database tables with the Models you created
