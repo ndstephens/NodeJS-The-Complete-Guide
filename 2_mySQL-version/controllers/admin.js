@@ -11,12 +11,14 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, price, description, imageUrl } = req.body
-  Product.create({
-    title: title.trim(),
-    price: parseFloat(price).toFixed(2) || 0.0,
-    description: description.trim(),
-    imageUrl: imageUrl || 'https://picsum.photos/300/300/?random',
-  })
+  // Product.create({
+  req.user
+    .createProduct({
+      title: title.trim(),
+      price: parseFloat(price).toFixed(2) || 0.0,
+      description: description.trim(),
+      imageUrl: imageUrl || 'https://picsum.photos/300/300/?random',
+    })
     .then(() => res.redirect('/admin/list-products'))
     .catch(err => console.log(err))
 }
