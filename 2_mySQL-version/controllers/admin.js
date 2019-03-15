@@ -17,8 +17,7 @@ exports.postAddProduct = (req, res, next) => {
     description: description.trim(),
     imageUrl: imageUrl || 'https://picsum.photos/300/300/?random',
   })
-    // .then(() => res.redirect('/'))
-    .then(result => console.log('Product Created...'))
+    .then(() => res.redirect('/'))
     .catch(err => console.log(err))
 }
 
@@ -35,37 +34,50 @@ exports.getListProducts = (req, res, next) => {
 }
 
 exports.getEditProduct = (req, res, next) => {
-  Product.findById(req.params.productId, product => {
-    if (!product) {
-      next()
-    } else {
+  Product.findByPk(req.params.productId)
+    .then(product => {
       res.render('admin/edit-product', {
         pageTitle: 'Admin Edit Product',
         activeTab: 'admin-edit',
         editMode: true,
         product,
       })
-    }
-  })
+    })
+    .catch(err => console.log(err))
 }
 
 exports.postEditProduct = (req, res, next) => {
-  // create new Product from updated info
-  const product = new Product(req.body)
-  // save method has logic to update Product in list if id already exists
-  product.save(err => {
-    if (err) {
-      next()
-    } else {
-      Cart.updateCartItem(product, err => {
-        if (err) {
-          next()
-        } else {
-          res.redirect('/admin/list-products')
-        }
-      })
-    }
-  })
+  const { id, title, price, imageUrl, description } = req.body
+  Product.update(
+    {
+      title: title.trim(),
+      price: parseFloat(price).toFixed(2) || 0.0,
+      description: description.trim(),
+      imageUrl: imageUrl || 'https://picsum.photos/300/300/?random',
+    },
+    { where: { id } }
+  )
+    .then(() => {
+      res.redirect('/admin/list-products')
+    })
+    .catch(err => console.log(err))
+
+  // // create new Product from updated info
+  // const product = new Product(req.body)
+  // // save method has logic to update Product in list if id already exists
+  // product.save(err => {
+  //   if (err) {
+  //     next()
+  //   } else {
+  //     Cart.updateCartItem(product, err => {
+  //       if (err) {
+  //         next()
+  //       } else {
+  //         res.redirect('/admin/list-products')
+  //       }
+  //     })
+  //   }
+  // })
 }
 
 exports.postDeleteProduct = (req, res, next) => {
