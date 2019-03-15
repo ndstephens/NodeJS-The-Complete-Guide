@@ -23,13 +23,15 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getListProducts = (req, res, next) => {
-  Product.fetchAll(products => {
-    res.render('admin/list-products', {
-      pageTitle: 'Admin List Products',
-      activeTab: 'admin-list',
-      products,
+  Product.findAll()
+    .then(products => {
+      res.render('admin/list-products', {
+        pageTitle: 'Admin List Products',
+        activeTab: 'admin-list',
+        products,
+      })
     })
-  })
+    .catch(err => console.log(err))
 }
 
 exports.getEditProduct = (req, res, next) => {
