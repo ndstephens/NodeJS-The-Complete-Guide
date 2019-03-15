@@ -17,7 +17,7 @@ exports.postAddProduct = (req, res, next) => {
     description: description.trim(),
     imageUrl: imageUrl || 'https://picsum.photos/300/300/?random',
   })
-    .then(() => res.redirect('/'))
+    .then(() => res.redirect('/admin/list-products'))
     .catch(err => console.log(err))
 }
 
@@ -57,42 +57,16 @@ exports.postEditProduct = (req, res, next) => {
     },
     { where: { id } }
   )
-    .then(() => {
-      res.redirect('/admin/list-products')
-    })
+    .then(() => res.redirect('/admin/list-products'))
     .catch(err => console.log(err))
-
-  // // create new Product from updated info
-  // const product = new Product(req.body)
-  // // save method has logic to update Product in list if id already exists
-  // product.save(err => {
-  //   if (err) {
-  //     next()
-  //   } else {
-  //     Cart.updateCartItem(product, err => {
-  //       if (err) {
-  //         next()
-  //       } else {
-  //         res.redirect('/admin/list-products')
-  //       }
-  //     })
-  //   }
-  // })
 }
 
 exports.postDeleteProduct = (req, res, next) => {
-  const { productId } = req.body
-  Product.deleteById(productId, err => {
-    if (err) {
-      next()
-    } else {
-      Cart.deleteCartItem(productId, err => {
-        if (err) {
-          next()
-        } else {
-          res.redirect('/admin/list-products')
-        }
-      })
-    }
-  })
+  Product.findByPk(req.body.id)
+    .then(product => {
+      return product.destroy()
+      // delete in Cart as well
+    })
+    .then(() => res.redirect('/admin/list-products'))
+    .catch(err => console.log(err))
 }
