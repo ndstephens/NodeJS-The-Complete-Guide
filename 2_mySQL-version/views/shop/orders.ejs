@@ -3,5 +3,28 @@
 
   <body>
     <%- include('../partials/nav.ejs') %>
+    <main>
+      <% if (orders.length > 0) { %>
+        <ul>
+          <% orders.forEach(order => { %>
+            <li>
+              <h1>Order #<%= order.id %></h1>
+              <ul>
+              <% order.products.forEach(product => { %>
+                <li><%= product.title %> (<%= product.orderItem.quantity %>)</li>
+              <% }) %>
+              </ul>
+            </li>
+          <% }) %>
+        </ul>
+        <!-- <div class="centered">
+          <form action="/create-order" method="POST">
+            <button type="submit" class="btn">Order Now</button>
+          </form>
+        </div> -->
+      <% } else { %>
+      <h1>No Orders</h1>
+      <% } %>
+    </main>
 
 <%- include('../partials/end.ejs') %>
