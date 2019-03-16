@@ -1,0 +1,93 @@
+<div class="backdrop"></div>
+<header class="main-header">
+  <button id="side-menu-toggle">Menu</button>
+  <nav class="main-header__nav">
+    <ul class="main-header__item-list">
+      <!-- SHOP -->
+      <li class="main-header__item">
+        <a href="/" class="<%= activeTab === 'shop' ? 'active' : '' %>">Shop</a>
+      </li>
+      <!-- PRODUCTS -->
+      <li class="main-header__item">
+        <a
+          href="/products"
+          class="<%= activeTab === 'products' ? 'active' : '' %>"
+          >Products</a
+        >
+      </li>
+      <!-- CART -->
+      <li class="main-header__item">
+        <a href="/cart" class="<%= activeTab === 'cart' ? 'active' : '' %>"
+          >Cart</a
+        >
+      </li>
+      <!-- ORDERS -->
+      <li class="main-header__item">
+        <a href="/orders" class="<%= activeTab === 'orders' ? 'active' : '' %>"
+          >Orders</a
+        >
+      </li>
+      <!-- ADMIN ADD PRODUCT -->
+      <li class="main-header__item">
+        <a
+          href="/admin/add-product"
+          class="<%= activeTab === 'admin-add' ? 'active' : '' %>"
+          >Add Product</a
+        >
+      </li>
+      <!-- ADMIN LIST PRODUCTS -->
+      <li class="main-header__item">
+        <a
+          href="/admin/list-products"
+          class="<%= activeTab === 'admin-list' ? 'active' : '' %>"
+          >List Products</a
+        >
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<nav class="mobile-nav">
+  <ul class="mobile-nav__item-list">
+    <!-- SHOP -->
+    <li class="mobile-nav__item">
+      <a class="<%= activeTab === 'shop' ? 'active' : '' %>" href="/">Shop</a>
+    </li>
+    <!-- PRODUCTS -->
+    <li class="mobile-nav__item">
+      <a
+        class="<%= activeTab === 'products' ? 'active' : '' %>"
+        href="/products"
+        >Products</a
+      >
+    </li>
+    <!-- CART -->
+    <li class="mobile-nav__item">
+      <a class="<%= activeTab === 'cart' ? 'active' : '' %>" href="/cart"
+        >Cart</a
+      >
+    </li>
+    <!-- ORDERS -->
+    <li class="mobile-nav__item">
+      <a class="<%= activeTab === 'orders' ? 'active' : '' %>" href="/orders"
+        >Orders</a
+      >
+    </li>
+    <!-- ADMIN ADD PRODUCT -->
+    <li class="mobile-nav__item">
+      <a
+        class="<%= activeTab === 'admin-add' ? 'active' : '' %>"
+        href="/admin/add-product"
+        >Add Product
+      </a>
+    </li>
+    <!-- ADMIN LIST PRODUCTS -->
+    <li class="mobile-nav__item">
+      <a
+        class="<%= activeTab === 'admin-list' ? 'active' : '' %>"
+        href="/admin/list-products"
+        >List Products
+      </a>
+    </li>
+  </ul>
+</nav>
