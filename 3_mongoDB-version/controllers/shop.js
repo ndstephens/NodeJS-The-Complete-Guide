@@ -27,7 +27,6 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   Product.findById(req.params.productId)
     .then(product => {
-      console.log(product)
       res.render('shop/product-detail', {
         pageTitle: 'Product Detail',
         activeTab: 'products',
