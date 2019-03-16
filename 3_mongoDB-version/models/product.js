@@ -2,12 +2,13 @@ const mongodb = require('mongodb')
 const { getDb } = require('../utils/database')
 
 class Product {
-  constructor({ title, price, description, imageUrl, id } = {}) {
+  constructor({ title, price, description, imageUrl, id, userId } = {}) {
     this.title = title.trim()
     this.price = parseFloat(price).toFixed(2) || 0.0
     this.description = description.trim()
     this.imageUrl = imageUrl || 'https://picsum.photos/300/300/?random'
     this._id = id ? new mongodb.ObjectId(id) : null
+    this.userId = userId
   }
 
   save() {

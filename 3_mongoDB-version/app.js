@@ -28,9 +28,11 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use((req, res, next) => {
   User.findById('5c8d48f511f4704da7212ba3')
-    .then(user => (req.user = user))
+    .then(user => {
+      req.user = user
+      next()
+    })
     .catch(err => console.log(err))
-  next()
 })
 
 //* ROUTERS
