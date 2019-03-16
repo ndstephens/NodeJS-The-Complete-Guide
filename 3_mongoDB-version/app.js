@@ -2,12 +2,12 @@ require('dotenv').config()
 const path = require('path')
 
 const express = require('express')
-const mongoConnect = require('./utils/database')
+const { mongoConnect } = require('./utils/database')
 const { get404 } = require('./controllers/404')
 
 //? ROUTES
 // const shopRoutes = require('./routes/shop')
-// const adminRoutes = require('./routes/admin')
+const adminRoutes = require('./routes/admin')
 
 //*--------------------------------------------------/
 //*           INITIALIZE APP
@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }))
 
 //* ROUTERS
 // app.use('/', shopRoutes)
-// app.use('/admin', adminRoutes)
+app.use('/admin', adminRoutes)
 
 //* 404 ERROR PAGE -- Catch All
 app.use(get404)
