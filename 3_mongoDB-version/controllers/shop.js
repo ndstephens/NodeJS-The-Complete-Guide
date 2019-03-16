@@ -1,7 +1,7 @@
 const Product = require('../models/product')
 
 exports.getIndex = (req, res, next) => {
-  Product.findAll()
+  Product.fetchall()
     .then(products => {
       res.render('shop/index', {
         pageTitle: 'Shop',
@@ -13,7 +13,7 @@ exports.getIndex = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  Product.fetchall()
     .then(products => {
       res.render('shop/products', {
         pageTitle: 'Products',

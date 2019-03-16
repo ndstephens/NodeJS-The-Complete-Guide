@@ -12,6 +12,14 @@ class Product {
     const db = getDb()
     return db.collection('products').insertOne(this)
   }
+
+  static fetchall() {
+    const db = getDb()
+    return db
+      .collection('products')
+      .find()
+      .toArray()
+  }
 }
 
 module.exports = Product
