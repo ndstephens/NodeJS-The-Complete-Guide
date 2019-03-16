@@ -1,4 +1,5 @@
 const Product = require('../models/product')
+const User = require('../models/user')
 
 exports.getIndex = (req, res, next) => {
   Product.fetchall()
@@ -52,31 +53,33 @@ exports.getProduct = (req, res, next) => {
 //     .catch(err => console.log(err))
 // }
 
-// exports.postCart = (req, res, next) => {
-//   const { id: productId } = JSON.parse(req.body.product)
-//   let fetchedCart
-//   req.user
-//     .getCart()
-//     .then(cart => {
-//       fetchedCart = cart
-//       return cart.getProducts({ where: { id: productId } })
-//     })
-//     .then(([product = undefined] = []) => {
-//       if (!product) {
-//         return Product.findByPk(productId).then(product => {
-//           return fetchedCart.addProduct(product, {
-//             through: { quantity: 1 },
-//           })
-//         })
-//       }
-//       const { quantity: qty } = product.cartItem
-//       return fetchedCart.addProduct(product, {
-//         through: { quantity: qty + 1 },
-//       })
-//     })
-//     .then(() => res.redirect('/cart'))
-//     .catch(err => console.log(err))
-// }
+exports.postCart = (req, res, next) => {
+  User.addToCart(req.body.productId, req.user)
+    .then(result => console.log('added'))
+    .catch(err => console.log(err))
+  // let fetchedCart
+  // req.user
+  //   .getCart()
+  //   .then(cart => {
+  //     fetchedCart = cart
+  //     return cart.getProducts({ where: { id: productId } })
+  //   })
+  //   .then(([product = undefined] = []) => {
+  //     if (!product) {
+  //       return Product.findByPk(productId).then(product => {
+  //         return fetchedCart.addProduct(product, {
+  //           through: { quantity: 1 },
+  //         })
+  //       })
+  //     }
+  //     const { quantity: qty } = product.cartItem
+  //     return fetchedCart.addProduct(product, {
+  //       through: { quantity: qty + 1 },
+  //     })
+  //   })
+  //   .then(() => res.redirect('/cart'))
+  //   .catch(err => console.log(err))
+}
 
 // exports.postCartDeleteItem = (req, res, next) => {
 //   const { productId } = req.body
