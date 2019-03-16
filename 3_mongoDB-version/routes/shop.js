@@ -3,7 +3,7 @@ const express = require('express')
 const {
   getIndex,
   getProducts,
-  // getProduct,
+  getProduct,
   // getCart,
   // postCart,
   // postCartDeleteItem,
@@ -19,7 +19,7 @@ router.get('/', getIndex)
 
 router.get('/products', getProducts)
 
-// router.get('/products/:productId', getProduct)
+router.get('/products/:productId', getProduct)
 
 // router.get('/cart', getCart)
 
