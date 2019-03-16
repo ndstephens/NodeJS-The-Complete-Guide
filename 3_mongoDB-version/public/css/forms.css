@@ -18,7 +18,6 @@
 }
 
 .form-control input:focus,
-.form-control textarea:focus,
-button.btn {
+.form-control textarea:focus {
   outline-color: #00695c;
 }
