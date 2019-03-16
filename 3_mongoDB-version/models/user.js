@@ -37,6 +37,23 @@ class User {
     return db.collection('users').updateOne({ _id }, { $set: rest })
   }
 
+  static getCart(user) {
+    const db = getDb()
+    const productIds = user.cart.items.map(item => item.productId)
+    return db
+      .collection('products')
+      .find({ _id: { $in: productIds } })
+      .toArray()
+      .then(products => {
+        return products.map(product => ({
+          ...product,
+          quantity: user.cart.items.find(
+            item => item.productId.toString() === product._id.toString()
+          ).quantity,
+        }))
+      })
+  }
+
   static findById(id) {
     const db = getDb()
     return db.collection('users').findOne({ _id: new mongodb.ObjectId(id) })
