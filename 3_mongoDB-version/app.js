@@ -5,6 +5,9 @@ const express = require('express')
 const { mongoConnect } = require('./utils/database')
 const { get404 } = require('./controllers/404')
 
+//? MODELS
+const User = require('./models/user')
+
 //? ROUTES
 const shopRoutes = require('./routes/shop')
 const adminRoutes = require('./routes/admin')
@@ -22,6 +25,13 @@ app.set('view engine', 'ejs')
 //* MIDDLEWARE
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
+
+app.use((req, res, next) => {
+  User.findById('5c8d48f511f4704da7212ba3')
+    .then(user => (req.user = user))
+    .catch(err => console.log(err))
+  next()
+})
 
 //* ROUTERS
 app.use('/', shopRoutes)
