@@ -17,14 +17,19 @@ class User {
   static addToCart(productId, user) {
     const db = getDb()
 
+    // check if item already exists in cart, get index
     const itemIndex = user.cart.items.findIndex(item => {
-      return item.productId === productId
+      return item.productId.toString() === productId.toString()
     })
 
     if (itemIndex === -1) {
       // item not found, add to cart w/ quantity of 1
-      user.cart.items.push({ productId, quantity: 1 })
+      user.cart.items.push({
+        productId: new mongodb.ObjectId(productId),
+        quantity: 1,
+      })
     } else {
+      // item found, add '1' to quantity
       user.cart.items[itemIndex].quantity++
     }
 
