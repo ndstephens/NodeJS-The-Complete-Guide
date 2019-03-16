@@ -52,14 +52,8 @@ exports.postEditProduct = (req, res, next) => {
     .catch(err => console.log(err))
 }
 
-// exports.postDeleteProduct = (req, res, next) => {
-//   // Product.findByPk(req.body.id)
-//   req.user
-//     .getProducts({ where: { id: req.body.id } })
-//     .then(product => {
-//       return product.destroy()
-//       // delete in Cart as well
-//     })
-//     .then(() => res.redirect('/admin/list-products'))
-//     .catch(err => console.log(err))
-// }
+exports.postDeleteProduct = (req, res, next) => {
+  Product.deleteById(req.body.id)
+    .then(() => res.redirect('/admin/list-products'))
+    .catch(err => console.log(err))
+}

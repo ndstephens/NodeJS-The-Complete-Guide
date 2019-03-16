@@ -2,7 +2,7 @@ const mongodb = require('mongodb')
 const { getDb } = require('../utils/database')
 
 class Product {
-  constructor({ title, price, description, imageUrl, id } = {}) {
+  constructor({ title, price, description, imageUrl, id = undefined } = {}) {
     this.title = title.trim()
     this.price = parseFloat(price).toFixed(2) || 0.0
     this.description = description.trim()
@@ -38,6 +38,13 @@ class Product {
       .collection('products')
       .find({ _id: new mongodb.ObjectId(id) })
       .next()
+  }
+
+  static deleteById(id) {
+    const db = getDb()
+    return db
+      .collection('products')
+      .deleteOne({ _id: new mongodb.ObjectId(id) })
   }
 }
 
