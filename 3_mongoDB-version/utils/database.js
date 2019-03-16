@@ -1,21 +1,21 @@
-// const mysql = require('mysql2')
+const mongodb = require('mongodb')
 
-// const pool = mysql.createPool({
-//   host: 'localhost',
-//   user: process.env.MYSQL_LOGIN_NAME,
-//   database: process.env.MYSQL_DB_NAME,
-//   password: process.env.MYSQL_DB_PASSWORD,
-// })
+const MongoClient = mongodb.MongoClient
 
-// module.exports = pool.promise()
+const user = process.env.MONGO_LOGIN_NAME
+const password = process.env.MONGO_PASSWORD
+const dbName = process.env.MONGO_DB_NAME
 
-const Sequelize = require('sequelize')
+const mongoConnect = cb => {
+  MongoClient.connect(
+    `mongodb+srv://${user}:${password}@${dbName}.mongodb.net/test?retryWrites=true`,
+    { useNewUrlParser: true }
+  )
+    .then(() => {
+      console.log('DB connected...')
+      cb()
+    })
+    .catch(err => console.log(err))
+}
 
-const sequelize = new Sequelize(
-  process.env.MYSQL_DB_NAME,
-  process.env.MYSQL_LOGIN_NAME,
-  process.env.MYSQL_DB_PASSWORD,
-  { dialect: 'mysql', host: 'localhost', operatorsAliases: false }
-)
-
-module.exports = sequelize
+module.exports = mongoConnect
