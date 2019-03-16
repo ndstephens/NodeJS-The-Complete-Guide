@@ -18,9 +18,9 @@ class User {
     const db = getDb()
 
     // check if item already exists in cart, get index
-    const itemIndex = user.cart.items.findIndex(item => {
-      return item.productId.toString() === productId.toString()
-    })
+    const itemIndex = user.cart.items.findIndex(
+      item => item.productId.toString() === productId.toString()
+    )
 
     if (itemIndex === -1) {
       // item not found, add to cart w/ quantity of 1
