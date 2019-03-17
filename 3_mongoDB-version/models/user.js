@@ -78,6 +78,19 @@ class User {
         { $set: { cart: { items: updatedCartItems } } }
       )
   }
+
+  static addOrder(user) {
+    const db = getDb()
+    return db
+      .collection('orders')
+      .insertOne(user.cart)
+      .then(() => {
+        user.cart = { items: [] }
+        return db
+          .collection('users')
+          .updateOne({ _id: user._id }, { $set: { cart: { items: [] } } })
+      })
+  }
 }
 
 module.exports = User
