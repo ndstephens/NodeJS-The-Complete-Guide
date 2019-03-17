@@ -82,7 +82,10 @@ class User {
   static getOrders(user) {
     const db = getDb()
 
-    return db.collection('orders').find({ user: { _id: user._id } })
+    return db
+      .collection('orders')
+      .find({ 'user._id': user._id })
+      .toArray()
   }
 
   static addOrder(user) {

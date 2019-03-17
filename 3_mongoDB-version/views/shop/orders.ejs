@@ -1,17 +1,19 @@
 <%- include('../partials/head.ejs') %>
+  <link rel="stylesheet" href="/css/orders.css">
   </head>
 
   <body>
     <%- include('../partials/nav.ejs') %>
     <main>
       <% if (orders.length > 0) { %>
-        <ul>
+        <ul class="orders">
           <% orders.forEach(order => { %>
-            <li>
+            <li class="orders__item">
               <h1>Order #<%= order._id %></h1>
-              <ul>
+              <ul class="orders__products">
               <% order.items.forEach(item => { %>
-                <li><%= item.title %> (<%= item.quantity %>)</li>
+                <li class="orders__products-item">
+                  <%= item.title %> (<%= item.quantity %>)</li>
               <% }) %>
               </ul>
             </li>
