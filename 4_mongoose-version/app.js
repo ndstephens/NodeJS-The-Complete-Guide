@@ -26,14 +26,14 @@ app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 
-app.use((req, res, next) => {
-  User.findById('5c8d48f511f4704da7212ba3')
-    .then(user => {
-      req.user = user
-      next()
-    })
-    .catch(err => console.log(err))
-})
+// app.use((req, res, next) => {
+//   User.findById('5c8d48f511f4704da7212ba3')
+//     .then(user => {
+//       req.user = user
+//       next()
+//     })
+//     .catch(err => console.log(err))
+// })
 
 //* ROUTERS
 app.use('/', shopRoutes)
