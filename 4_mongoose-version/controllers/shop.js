@@ -1,29 +1,29 @@
-// const Product = require('../models/product')
+const Product = require('../models/product')
 // const User = require('../models/user')
 
-// exports.getIndex = (req, res, next) => {
-//   Product.fetchall()
-//     .then(products => {
-//       res.render('shop/index', {
-//         pageTitle: 'Shop',
-//         activeTab: 'shop',
-//         products,
-//       })
-//     })
-//     .catch(err => console.log(err))
-// }
+exports.getIndex = (req, res, next) => {
+  Product.find()
+    .then(products => {
+      res.render('shop/index', {
+        pageTitle: 'Shop',
+        activeTab: 'shop',
+        products,
+      })
+    })
+    .catch(err => console.log(err))
+}
 
-// exports.getProducts = (req, res, next) => {
-//   Product.fetchall()
-//     .then(products => {
-//       res.render('shop/products', {
-//         pageTitle: 'Products',
-//         activeTab: 'products',
-//         products,
-//       })
-//     })
-//     .catch(err => console.log(err))
-// }
+exports.getProducts = (req, res, next) => {
+  Product.find()
+    .then(products => {
+      res.render('shop/products', {
+        pageTitle: 'Products',
+        activeTab: 'products',
+        products,
+      })
+    })
+    .catch(err => console.log(err))
+}
 
 // exports.getProduct = (req, res, next) => {
 //   Product.findById(req.params.productId)

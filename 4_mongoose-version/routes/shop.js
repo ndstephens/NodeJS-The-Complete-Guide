@@ -1,8 +1,8 @@
 const express = require('express')
 
 const {
-  // getIndex,
-  // getProducts,
+  getIndex,
+  getProducts,
   // getProduct,
   // getCart,
   // postCart,
@@ -15,9 +15,9 @@ const {
 //? ------ '/'
 const router = express.Router()
 
-// router.get('/', getIndex)
+router.get('/', getIndex)
 
-// router.get('/products', getProducts)
+router.get('/products', getProducts)
 
 // router.get('/products/:productId', getProduct)
 
