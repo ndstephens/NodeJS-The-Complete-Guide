@@ -31,6 +31,8 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getListProducts = (req, res, next) => {
   Product.find()
+    // .select('title price -_id') //* only return title and price
+    // .populate('userId') //* include all User info based on stored userId
     .then(products => {
       res.render('admin/list-products', {
         pageTitle: 'Admin List Products',
