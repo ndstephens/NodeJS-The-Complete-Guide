@@ -25,17 +25,17 @@ exports.getProducts = (req, res, next) => {
     .catch(err => console.log(err))
 }
 
-// exports.getProduct = (req, res, next) => {
-//   Product.findById(req.params.productId)
-//     .then(product => {
-//       res.render('shop/product-detail', {
-//         pageTitle: 'Product Detail',
-//         activeTab: 'products',
-//         product,
-//       })
-//     })
-//     .catch(err => console.log(err))
-// }
+exports.getProduct = (req, res, next) => {
+  Product.findById(req.params.productId)
+    .then(product => {
+      res.render('shop/product-detail', {
+        pageTitle: 'Product Detail',
+        activeTab: 'products',
+        product,
+      })
+    })
+    .catch(err => console.log(err))
+}
 
 // exports.getCart = (req, res, next) => {
 //   User.getCart(req.user)
