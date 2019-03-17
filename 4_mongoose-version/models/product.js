@@ -2,24 +2,31 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const productSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
+const productSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    price: {
+      type: Number,
+      default: 0,
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    imageUrl: {
+      type: String,
+      default: 'https://picsum.photos/300/300/?random',
+    },
   },
-  price: {
-    type: Number,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  imageUrl: {
-    type: String,
-    required: true,
-  },
-})
+  {
+    timestamps: true,
+  }
+)
 
 module.exports = mongoose.model('Product', productSchema)
 //? the model name, 'Product', will be used by mongoose to create a collection named 'products'

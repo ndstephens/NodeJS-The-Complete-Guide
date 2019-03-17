@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const { get404 } = require('./controllers/404')
 
 //? MODELS
-const User = require('./models/user')
+// const User = require('./models/user')
 
 //? ROUTES
 const shopRoutes = require('./routes/shop')
@@ -44,6 +44,10 @@ app.use(get404)
 
 //* RUN SERVER
 mongoose
-  .connect(process.env.MONGO_DB_URL)
+  .connect(process.env.MONGO_DB_URL, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
   .then(() => app.listen(port, () => console.log('Server running...')))
   .catch(err => console.log(err))

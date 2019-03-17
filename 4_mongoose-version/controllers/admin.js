@@ -9,10 +9,10 @@ exports.getAddProduct = (req, res, next) => {
 }
 
 exports.postAddProduct = (req, res, next) => {
-  const title = req.body.title.trim()
-  const price = parseFloat(req.body.price).toFixed(2) || 0.0
-  const description = req.body.description.trim()
-  const imageUrl = req.body.imageUrl || 'https://picsum.photos/300/300/?random'
+  const title = req.body.title
+  const price = req.body.price || undefined
+  const description = req.body.description
+  const imageUrl = req.body.imageUrl.trim() || undefined
 
   const product = new Product({ title, price, description, imageUrl })
   product
@@ -50,10 +50,10 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   const id = req.body.id
-  const title = req.body.title.trim()
-  const price = parseFloat(req.body.price).toFixed(2) || 0.0
-  const description = req.body.description.trim()
-  const imageUrl = req.body.imageUrl || 'https://picsum.photos/300/300/?random'
+  const title = req.body.title
+  const price = req.body.price || undefined
+  const description = req.body.description
+  const imageUrl = req.body.imageUrl.trim() || undefined
 
   Product.findByIdAndUpdate(
     id,
