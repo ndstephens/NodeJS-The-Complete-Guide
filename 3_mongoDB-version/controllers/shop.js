@@ -55,17 +55,11 @@ exports.postCart = (req, res, next) => {
     .catch(err => console.log(err))
 }
 
-// exports.postCartDeleteItem = (req, res, next) => {
-//   const { productId } = req.body
-//   req.user
-//     .getCart()
-//     .then(cart => cart.getProducts({ where: { id: productId } }))
-//     .then(([product = undefined] = []) => {
-//       return product.cartItem.destroy()
-//     })
-//     .then(() => res.redirect('/cart'))
-//     .catch(err => console.log(err))
-// }
+exports.postCartDeleteItem = (req, res, next) => {
+  User.deleteItemFromCart(req.body.productId, req.user)
+    .then(() => res.redirect('/cart'))
+    .catch(err => console.log(err))
+}
 
 // exports.getOrders = (req, res, next) => {
 //   req.user

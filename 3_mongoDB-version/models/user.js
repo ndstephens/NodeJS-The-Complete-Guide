@@ -14,27 +14,9 @@ class User {
     return db.collection('users').insertOne(this)
   }
 
-  static addToCart(productId, user) {
+  static findById(id) {
     const db = getDb()
-
-    // check if item already exists in cart, get index
-    const itemIndex = user.cart.items.findIndex(
-      item => item.productId.toString() === productId.toString()
-    )
-
-    if (itemIndex === -1) {
-      // item not found, add to cart w/ quantity of 1
-      user.cart.items.push({
-        productId: new mongodb.ObjectId(productId),
-        quantity: 1,
-      })
-    } else {
-      // item found, add '1' to quantity
-      user.cart.items[itemIndex].quantity++
-    }
-
-    const { _id, ...rest } = user
-    return db.collection('users').updateOne({ _id }, { $set: rest })
+    return db.collection('users').findOne({ _id: new mongodb.ObjectId(id) })
   }
 
   static getCart(user) {
@@ -54,9 +36,47 @@ class User {
       })
   }
 
-  static findById(id) {
+  static addToCart(productId, user) {
     const db = getDb()
-    return db.collection('users').findOne({ _id: new mongodb.ObjectId(id) })
+    const updatedCartItems = [...user.cart.items]
+
+    // check if item already exists in cart, get index
+    const itemIndex = user.cart.items.findIndex(
+      item => item.productId.toString() === productId.toString()
+    )
+
+    if (itemIndex === -1) {
+      // item not found, add to cart w/ quantity of 1
+      updatedCartItems.push({
+        productId: new mongodb.ObjectId(productId),
+        quantity: 1,
+      })
+    } else {
+      // item found, add '1' to quantity
+      updatedCartItems[itemIndex].quantity++
+    }
+
+    return db
+      .collection('users')
+      .updateOne(
+        { _id: user._id },
+        { $set: { cart: { items: updatedCartItems } } }
+      )
+  }
+
+  static deleteItemFromCart(productId, user) {
+    const db = getDb()
+
+    const updatedCartItems = user.cart.items.filter(
+      item => item.productId.toString() !== productId.toString()
+    )
+
+    return db
+      .collection('users')
+      .updateOne(
+        { _id: user._id },
+        { $set: { cart: { items: updatedCartItems } } }
+      )
   }
 }
 
