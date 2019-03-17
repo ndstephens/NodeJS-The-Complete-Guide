@@ -4,8 +4,8 @@ const {
   getAddProduct,
   postAddProduct,
   getListProducts,
-  // getEditProduct,
-  // postEditProduct,
+  getEditProduct,
+  postEditProduct,
   // postDeleteProduct,
 } = require('../controllers/admin')
 
@@ -18,9 +18,9 @@ router.post('/add-product', postAddProduct)
 
 router.get('/list-products', getListProducts)
 
-// router.get('/edit-product/:productId', getEditProduct)
+router.get('/edit-product/:productId', getEditProduct)
 
-// router.post('/edit-product', postEditProduct)
+router.post('/edit-product', postEditProduct)
 
 // router.post('/delete-product', postDeleteProduct)
 
