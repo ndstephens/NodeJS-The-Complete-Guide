@@ -1,8 +1,8 @@
 const express = require('express')
 
 const {
-  // getAddProduct,
-  // postAddProduct,
+  getAddProduct,
+  postAddProduct,
   // getListProducts,
   // getEditProduct,
   // postEditProduct,
@@ -12,9 +12,9 @@ const {
 //? ------ '/admin'
 const router = express.Router()
 
-// router.get('/add-product', getAddProduct)
+router.get('/add-product', getAddProduct)
 
-// router.post('/add-product', postAddProduct)
+router.post('/add-product', postAddProduct)
 
 // router.get('/list-products', getListProducts)
 
