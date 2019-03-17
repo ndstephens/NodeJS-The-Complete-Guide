@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const { get404 } = require('./controllers/404')
 
 //? MODELS
-// const User = require('./models/user')
+const User = require('./models/user')
 
 //? ROUTES
 const shopRoutes = require('./routes/shop')
@@ -26,14 +26,15 @@ app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 
-// app.use((req, res, next) => {
-//   User.findById('5c8d48f511f4704da7212ba3')
-//     .then(user => {
-//       req.user = user
-//       next()
-//     })
-//     .catch(err => console.log(err))
-// })
+//? add user to the request object
+app.use((req, res, next) => {
+  User.findById('5c8ecae38f375680784ae395')
+    .then(user => {
+      req.user = user
+      next()
+    })
+    .catch(err => console.log(err))
+})
 
 //* ROUTERS
 app.use('/', shopRoutes)
@@ -49,5 +50,15 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   })
+  // .then(() => {
+  //   const user = new User({
+  //     name: 'Nate',
+  //     email: 'nate@email.com',
+  //     cart: {
+  //       items: [],
+  //     },
+  //   })
+  //   user.save()
+  // })
   .then(() => app.listen(port, () => console.log('Server running...')))
   .catch(err => console.log(err))
