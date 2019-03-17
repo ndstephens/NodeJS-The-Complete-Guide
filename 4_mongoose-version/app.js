@@ -2,7 +2,7 @@ require('dotenv').config()
 const path = require('path')
 
 const express = require('express')
-const { mongoConnect } = require('./utils/database')
+const mongoose = require('mongoose')
 const { get404 } = require('./controllers/404')
 
 //? MODELS
@@ -43,6 +43,7 @@ app.use('/admin', adminRoutes)
 app.use(get404)
 
 //* RUN SERVER
-mongoConnect(() => {
-  app.listen(port, () => console.log('Server running...'))
-})
+mongoose
+  .connect(process.env.MONGO_DB_URL)
+  .then(() => app.listen(port, () => console.log('Server running...')))
+  .catch(err => console.log(err))
