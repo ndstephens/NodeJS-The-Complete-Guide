@@ -22,6 +22,11 @@ const productSchema = new Schema(
       type: String,
       default: 'https://picsum.photos/300/300/?random',
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,
