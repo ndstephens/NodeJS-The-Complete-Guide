@@ -44,5 +44,5 @@ app.use(get404)
 
 //* RUN SERVER
 mongoConnect(() => {
-  app.listen(port)
+  app.listen(port, () => console.log('Server running...'))
 })
