@@ -61,18 +61,17 @@ exports.postCartDeleteItem = (req, res, next) => {
     .catch(err => console.log(err))
 }
 
-// exports.getOrders = (req, res, next) => {
-//   req.user
-//     .getOrders({ include: ['products'] })
-//     .then(orders => {
-//       res.render('shop/orders', {
-//         pageTitle: 'Orders',
-//         activeTab: 'orders',
-//         orders,
-//       })
-//     })
-//     .catch(err => console.log(err))
-// }
+exports.getOrders = (req, res, next) => {
+  User.getOrders(req.user)
+    .then(orders => {
+      res.render('shop/orders', {
+        pageTitle: 'Orders',
+        activeTab: 'orders',
+        orders,
+      })
+    })
+    .catch(err => console.log(err))
+}
 
 exports.postOrder = (req, res, next) => {
   User.addOrder(req.user)
