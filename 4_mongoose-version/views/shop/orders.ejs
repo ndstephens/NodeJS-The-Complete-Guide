@@ -1,0 +1,32 @@
+<%- include('../partials/head.ejs') %>
+  <link rel="stylesheet" href="/css/orders.css">
+  </head>
+
+  <body>
+    <%- include('../partials/nav.ejs') %>
+    <main>
+      <% if (orders.length > 0) { %>
+        <ul class="orders">
+          <% orders.forEach(order => { %>
+            <li class="orders__item">
+              <h1>Order #<%= order._id %></h1>
+              <ul class="orders__products">
+              <% order.items.forEach(item => { %>
+                <li class="orders__products-item">
+                  <%= item.title %> (<%= item.quantity %>)</li>
+              <% }) %>
+              </ul>
+            </li>
+          <% }) %>
+        </ul>
+        <!-- <div class="centered">
+          <form action="/create-order" method="POST">
+            <button type="submit" class="btn">Order Now</button>
+          </form>
+        </div> -->
+      <% } else { %>
+      <h1>No Orders</h1>
+      <% } %>
+    </main>
+
+<%- include('../partials/end.ejs') %>
