@@ -54,12 +54,10 @@ userSchema.methods.addToCart = function(productId) {
 
   this.cart.items = updatedCartItems
   return this.save()
-  // return db
-  //   .collection('users')
-  //   .updateOne(
-  //     { _id: user._id },
-  //     { $set: { cart: { items: updatedCartItems } } }
-  //   )
+}
+
+userSchema.methods.getCart = function() {
+  return this.populate('cart.items.productId').execPopulate()
 }
 
 module.exports = mongoose.model('User', userSchema)

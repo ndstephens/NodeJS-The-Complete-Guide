@@ -37,17 +37,19 @@ exports.getProduct = (req, res, next) => {
     .catch(err => console.log(err))
 }
 
-// exports.getCart = (req, res, next) => {
-//   User.getCart(req.user)
-//     .then(products => {
-//       res.render('shop/cart', {
-//         pageTitle: 'Cart',
-//         activeTab: 'cart',
-//         products,
-//       })
-//     })
-//     .catch(err => console.log(err))
-// }
+exports.getCart = (req, res, next) => {
+  req.user
+    .getCart()
+    .then(user => {
+      console.log(user.cart.items)
+      res.render('shop/cart', {
+        pageTitle: 'Cart',
+        activeTab: 'cart',
+        products: user.cart.items,
+      })
+    })
+    .catch(err => console.log(err))
+}
 
 exports.postCart = (req, res, next) => {
   req.user
