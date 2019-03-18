@@ -11,6 +11,7 @@ const User = require('./models/user')
 //? ROUTES
 const shopRoutes = require('./routes/shop')
 const adminRoutes = require('./routes/admin')
+const authRoutes = require('./routes/auth')
 
 //*--------------------------------------------------/
 //*           INITIALIZE APP
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 //* ROUTERS
 app.use('/', shopRoutes)
 app.use('/admin', adminRoutes)
+app.use('/', authRoutes)
 
 //* 404 ERROR PAGE -- Catch All
 app.use(get404)
