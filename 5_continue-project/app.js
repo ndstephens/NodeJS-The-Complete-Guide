@@ -4,6 +4,7 @@ const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
 const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
 
 //? MODELS
 const User = require('./models/user')
@@ -23,6 +24,11 @@ const { get404 } = require('./controllers/404')
 const app = express()
 // Port
 const port = process.env.PORT || 3000
+// Session Store
+const store = new MongoDBStore({
+  uri: process.env.MONGO_DB_URL,
+  collection: 'sessions',
+})
 // View Engine
 app.set('view engine', 'ejs')
 
@@ -34,18 +40,28 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: store,
   })
 )
 
-//? add user to the request object
 app.use((req, res, next) => {
-  User.findById('5c8ecae38f375680784ae395')
-    .then(user => {
-      req.user = user
-      next()
-    })
-    .catch(err => console.log(err))
+  if (req.session.isLoggedIn) {
+    res.locals.isAuthenticated = true
+  } else {
+    res.locals.isAuthenticated = false
+  }
+  next()
 })
+
+//? add user to the request object
+// app.use((req, res, next) => {
+// User.findById('5c8ecae38f375680784ae395')
+//   .then(user => {
+//     req.user = user
+//     next()
+//   })
+//   .catch(err => console.log(err))
+// })
 
 //* ROUTERS
 app.use('/', shopRoutes)
