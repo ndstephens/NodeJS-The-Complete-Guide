@@ -27,22 +27,25 @@
           >Orders</a
         >
       </li>
+
+      <% if (isAuthenticated) { %>
       <!-- ADMIN ADD PRODUCT -->
-      <!-- <li class="main-header__item">
+      <li class="main-header__item">
         <a
           href="/admin/add-product"
           class="<%= activeTab === 'admin-add' ? 'active' : '' %>"
           >Add Product</a
         >
-      </li> -->
+      </li>
       <!-- ADMIN LIST PRODUCTS -->
-      <!-- <li class="main-header__item">
+      <li class="main-header__item">
         <a
           href="/admin/list-products"
           class="<%= activeTab === 'admin-list' ? 'active' : '' %>"
           >List Products</a
         >
-      </li> -->
+      </li>
+      <% } %>
     </ul>
     <ul class="main-header__item-list">
       <li class="main-header__item">
