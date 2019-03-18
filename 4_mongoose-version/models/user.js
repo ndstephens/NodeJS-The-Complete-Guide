@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema(
   }
 )
 
+//* ========= ADD TO CART ==========
 userSchema.methods.addToCart = function(productId) {
   const updatedCartItems = [...this.cart.items]
   // check if item already exists in cart, get index
@@ -56,10 +57,23 @@ userSchema.methods.addToCart = function(productId) {
   return this.save()
 }
 
+//* ========= GET CART ==========
 userSchema.methods.getCart = function() {
   return this.populate('cart.items.productId').execPopulate()
 }
 
+//* ========= DELETE FROM CART ==========
+userSchema.methods.deleteFromCart = function(productId) {
+  const updatedCartItems = this.cart.items.filter(
+    item => item.productId.toString() !== productId.toString()
+  )
+
+  this.cart.items = updatedCartItems
+  return this.save()
+}
+
+//
+//* CREATE / EXPORT MODEL
 module.exports = mongoose.model('User', userSchema)
 
 // const mongodb = require('mongodb')
