@@ -43,14 +43,19 @@ app.use(
     store: store,
   })
 )
-
+//? check session auth, make status available to current request w/ res.local
+//? add user instance to request object (from session info) so user instance methods are available
 app.use((req, res, next) => {
   if (req.session.isLoggedIn) {
     res.locals.isAuthenticated = true
+    User.findById(req.session.user._id).then(user => {
+      req.user = user
+      next()
+    })
   } else {
     res.locals.isAuthenticated = false
+    next()
   }
-  next()
 })
 
 //? add user to the request object
