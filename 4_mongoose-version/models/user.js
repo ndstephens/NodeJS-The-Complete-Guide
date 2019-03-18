@@ -35,6 +35,33 @@ const userSchema = new mongoose.Schema(
   }
 )
 
+userSchema.methods.addToCart = function(productId) {
+  const updatedCartItems = [...this.cart.items]
+  // check if item already exists in cart, get index
+  const itemIndex = this.cart.items.findIndex(
+    item => item.productId.toString() === productId.toString()
+  )
+  if (itemIndex === -1) {
+    // item not found, add to cart w/ quantity of 1
+    updatedCartItems.push({
+      productId: productId,
+      quantity: 1,
+    })
+  } else {
+    // item found, add '1' to quantity
+    updatedCartItems[itemIndex].quantity++
+  }
+
+  this.cart.items = updatedCartItems
+  return this.save()
+  // return db
+  //   .collection('users')
+  //   .updateOne(
+  //     { _id: user._id },
+  //     { $set: { cart: { items: updatedCartItems } } }
+  //   )
+}
+
 module.exports = mongoose.model('User', userSchema)
 
 // const mongodb = require('mongodb')
