@@ -3,7 +3,7 @@ const path = require('path')
 
 const express = require('express')
 const mongoose = require('mongoose')
-const { get404 } = require('./controllers/404')
+const session = require('express-session')
 
 //? MODELS
 const User = require('./models/user')
@@ -12,6 +12,9 @@ const User = require('./models/user')
 const shopRoutes = require('./routes/shop')
 const adminRoutes = require('./routes/admin')
 const authRoutes = require('./routes/auth')
+
+//? CONTROLLERS
+const { get404 } = require('./controllers/404')
 
 //*--------------------------------------------------/
 //*           INITIALIZE APP
@@ -26,6 +29,13 @@ app.set('view engine', 'ejs')
 //* MIDDLEWARE
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+)
 
 //? add user to the request object
 app.use((req, res, next) => {
