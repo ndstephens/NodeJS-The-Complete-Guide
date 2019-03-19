@@ -56,6 +56,12 @@
           >Login</a
         >
       </li>
+      <!-- SIGNUP -->
+      <li class="main-header__item">
+        <a href="/signup" class="<%= activeTab === 'signup' ? 'active' : '' %>"
+          >Signup</a
+        >
+      </li>
       <% } else { %>
       <!-- LOGOUT -->
       <li class="main-header__item">
@@ -82,6 +88,8 @@
         >Products</a
       >
     </li>
+
+    <% if (isAuthenticated) { %>
     <!-- CART -->
     <li class="mobile-nav__item">
       <a class="<%= activeTab === 'cart' ? 'active' : '' %>" href="/cart"
@@ -110,5 +118,29 @@
         >List Products
       </a>
     </li>
+    <% } %>
+
+    <!-- prettier-ignore -->
+    <% if (!isAuthenticated) { %>
+    <!-- LOGIN -->
+    <li class="mobile-nav__item">
+      <a class="<%= activeTab === 'login' ? 'active' : '' %>" href="/login"
+        >Login</a
+      >
+    </li>
+    <!-- SIGNUP -->
+    <li class="mobile-nav__item">
+      <a class="<%= activeTab === 'signup' ? 'active' : '' %>" href="/signup"
+        >Signup</a
+      >
+    </li>
+    <% } else { %>
+    <!-- LOGOUT -->
+    <li class="mobile-nav__item">
+      <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+      </form>
+    </li>
+    <% } %>
   </ul>
 </nav>
