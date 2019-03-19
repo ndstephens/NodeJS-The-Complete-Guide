@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
+const flash = require('connect-flash')
 
 //? MODELS
 const User = require('./models/user')
@@ -47,6 +48,7 @@ app.use(
   })
 )
 app.use(csrfProtection)
+app.use(flash())
 
 //? add user instance to request object (from session info) so user instance methods are available
 app.use((req, res, next) => {
