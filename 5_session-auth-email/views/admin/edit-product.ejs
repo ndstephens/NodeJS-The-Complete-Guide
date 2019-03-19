@@ -54,6 +54,7 @@
         <% } %>
 
         <!-- SUBMIT BUTTON -->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <button class="btn" type="submit">
           <%= editMode ? 'Update Product' : 'Add Product' %>
         </button>
