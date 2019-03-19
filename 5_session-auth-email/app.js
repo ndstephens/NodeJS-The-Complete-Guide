@@ -60,16 +60,6 @@ app.use((req, res, next) => {
   }
 })
 
-//? add user to the request object
-// app.use((req, res, next) => {
-// User.findById('5c8ecae38f375680784ae395')
-//   .then(user => {
-//     req.user = user
-//     next()
-//   })
-//   .catch(err => console.log(err))
-// })
-
 //* ROUTERS
 app.use('/', shopRoutes)
 app.use('/admin', adminRoutes)
@@ -85,15 +75,5 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  // .then(() => {
-  //   const user = new User({
-  //     name: 'Nate',
-  //     email: 'nate@email.com',
-  //     cart: {
-  //       items: [],
-  //     },
-  //   })
-  //   user.save()
-  // })
   .then(() => app.listen(port, () => console.log('Server running...')))
   .catch(err => console.log(err))
