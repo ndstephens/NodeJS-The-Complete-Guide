@@ -1,5 +1,16 @@
 const bcrypt = require('bcryptjs')
+const nodemailer = require('nodemailer')
+const sendgridTransport = require('nodemailer-sendgrid-transport')
+
 const User = require('../models/user')
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key: process.env.SENDGRID_API_KEY,
+    },
+  })
+)
 
 exports.getLogin = (req, res, next) => {
   // Must first retrieve req.flash() b/c upon doing so it is erased.  Then check its value
@@ -75,7 +86,15 @@ exports.postSignup = (req, res, next) => {
           })
           return user.save()
         })
-        .then(() => res.redirect('/login'))
+        .then(() => {
+          res.redirect('/login')
+          return transporter.sendMail({
+            to: email,
+            from: 'cs@node-complete.com',
+            subject: 'Signup Successful',
+            html: `<h1>You successfully signed up</h1>`,
+          })
+        })
     })
     .catch(err => console.log(err))
 }
@@ -84,5 +103,16 @@ exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
     if (err) console.log(err)
     res.redirect('/')
+  })
+}
+
+exports.getReset = (req, res, next) => {
+  let msg = req.flash('error')
+  msg = msg.length === 0 ? null : msg
+
+  res.render('auth/reset', {
+    pageTitle: 'Password Reset',
+    activeTab: 'reset',
+    errorMessage: msg,
   })
 }

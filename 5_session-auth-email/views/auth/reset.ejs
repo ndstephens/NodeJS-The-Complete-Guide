@@ -23,25 +23,13 @@
             id="email"
             autofocus />
         </div>
-        <!-- PASSWORD -->
-        <div class="form-control">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password" />
-        </div>
 
         <!-- SUBMIT BUTTON -->
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <button class="btn" type="submit">
-          Login
+          Reset Password
         </button>
       </form>
-
-      <div class="centered">
-        <a href="/reset">Reset Password</a>
-      </div>
     </main>
 
 <%- include('../partials/end.ejs') %>
