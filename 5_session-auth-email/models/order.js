@@ -9,14 +9,14 @@ const orderSchema = new mongoose.Schema({
       },
       quantity: {
         type: Number,
-        require: true,
+        required: true,
       },
     },
   ],
   user: {
-    name: {
+    email: {
       type: String,
-      require: true,
+      required: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
