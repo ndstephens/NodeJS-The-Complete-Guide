@@ -1,5 +1,4 @@
 const express = require('express')
-
 const router = express.Router()
 
 const {
@@ -11,6 +10,7 @@ const {
 } = require('../controllers/auth')
 
 //? ------ '/'
+
 router.get('/login', getLogin)
 
 router.post('/login', postLogin)
