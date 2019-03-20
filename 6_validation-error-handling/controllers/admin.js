@@ -40,10 +40,7 @@ exports.postAddProduct = (req, res, next) => {
     .then(() => {
       res.redirect('/admin/list-products')
     })
-    .catch(err => {
-      console.log(err)
-      res.redirect('/500')
-    })
+    .catch(err => next(err))
 }
 
 exports.getListProducts = (req, res, next) => {
@@ -58,7 +55,7 @@ exports.getListProducts = (req, res, next) => {
         products,
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => next(err))
 }
 
 exports.getEditProduct = (req, res, next) => {

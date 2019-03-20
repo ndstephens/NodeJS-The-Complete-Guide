@@ -59,9 +59,7 @@ app.use((req, res, next) => {
       req.user = user
       next()
     })
-    .catch(err => {
-      throw new Error(err)
-    })
+    .catch(err => next(err))
 })
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn
@@ -79,6 +77,13 @@ app.get('/500', get500)
 
 //* 404 ERROR PAGE -- Catch All
 app.use(get404)
+
+//* EXPRESS ERROR HANDLER
+app.use((err, req, res, next) => {
+  // res.status(err.httpStatusCode).render(...)
+  console.log(err)
+  res.redirect('/500')
+})
 
 //* RUN SERVER
 mongoose
