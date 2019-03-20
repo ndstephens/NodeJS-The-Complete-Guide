@@ -7,6 +7,10 @@
     <%- include('../partials/nav.ejs') %>
 
     <main>
+      <% if (errorMessage) { %>
+        <div class="user-message user-message--error"><%= errorMessage %></div>
+      <% } %>
+
       <form
         class="product-form"
         action="/admin/<%= editMode ? 'edit-product' : 'add-product' %>"
@@ -18,7 +22,7 @@
             type="text"
             name="title"
             id="title"
-            value="<%= editMode ? product.title : '' %>"
+            value="<%= editMode ? product.title : oldInputs.title %>"
             autofocus />
         </div>
         <!-- IMAGE URL -->
@@ -28,7 +32,7 @@
             type="text"
             name="imageUrl"
             id="imageUrl"
-            value="<%= editMode ? product.imageUrl : '' %>" />
+            value="<%= editMode ? product.imageUrl : oldInputs.imageUrl %>" />
         </div>
         <!-- PRICE -->
         <div class="form-control">
@@ -38,7 +42,7 @@
             name="price"
             id="price"
             step="0.01"
-            value="<%= editMode ? parseFloat(product.price).toFixed(2) : '' %>" />
+            value="<%= editMode ? parseFloat(product.price).toFixed(2) : oldInputs.price %>" />
         </div>
         <!-- DESCRIPTION -->
         <div class="form-control">
@@ -46,7 +50,7 @@
           <textarea
             name="description"
             id="description"
-            rows="5"><%= editMode ? product.description : '' %></textarea>
+            rows="5"><%= editMode ? product.description : oldInputs.description %></textarea>
         </div>
         <!-- ID -- only used for editing -->
         <% if (editMode) { %>

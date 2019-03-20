@@ -1,7 +1,9 @@
 const express = require('express')
-const router = express.Router()
+const { body } = require('express-validator/check')
 
 const isAuth = require('../middleware/is-auth')
+
+const router = express.Router()
 
 const {
   getAddProduct,
@@ -16,13 +18,45 @@ const {
 
 router.get('/add-product', getAddProduct)
 
-router.post('/add-product', isAuth, postAddProduct)
+router.post(
+  '/add-product',
+  [
+    body('title', 'Must include a title')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 100 }),
+    // body('imageUrl', 'Must be a valid URL').isURL(),
+    body('price', 'Price must be a number').isFloat(),
+    body('description', 'Must include a description')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 500 }),
+  ],
+  isAuth,
+  postAddProduct
+)
 
 router.get('/list-products', isAuth, getListProducts)
 
 router.get('/edit-product/:productId', isAuth, getEditProduct)
 
-router.post('/edit-product', isAuth, isAuth, postEditProduct)
+router.post(
+  '/edit-product',
+  [
+    body('title', 'Must include a title')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 100 }),
+    // body('imageUrl', 'Must be a valid URL').isURL(),
+    body('price', 'Price must be a number').isFloat(),
+    body('description', 'Must include a description')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 500 }),
+  ],
+  isAuth,
+  postEditProduct
+)
 
 router.post('/delete-product', isAuth, postDeleteProduct)
 
