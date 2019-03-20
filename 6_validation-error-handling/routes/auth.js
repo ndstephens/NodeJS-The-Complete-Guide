@@ -1,4 +1,5 @@
 const express = require('express')
+const { check } = require('express-validator/check')
 const router = express.Router()
 
 const {
@@ -21,7 +22,7 @@ router.post('/login', postLogin)
 
 router.get('/signup', getSignup)
 
-router.post('/signup', postSignup)
+router.post('/signup', check('email').isEmail(), postSignup)
 
 router.post('/logout', postLogout)
 
