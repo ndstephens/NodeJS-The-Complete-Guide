@@ -30,7 +30,7 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getListProducts = (req, res, next) => {
-  Product.find()
+  Product.find({ userId: req.user._id })
     // .select('title price -_id') //* only return title and price
     // .populate('userId') //* include all User info based on stored userId
     .then(products => {
