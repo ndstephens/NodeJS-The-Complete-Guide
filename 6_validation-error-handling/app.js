@@ -17,7 +17,7 @@ const adminRoutes = require('./routes/admin')
 const authRoutes = require('./routes/auth')
 
 //? CONTROLLERS
-const { get404 } = require('./controllers/404')
+const { get404, get500 } = require('./controllers/404')
 
 //*--------------------------------------------------/
 //*           INITIALIZE APP
@@ -55,10 +55,13 @@ app.use((req, res, next) => {
   if (!req.session.user) return next()
   User.findById(req.session.user._id)
     .then(user => {
+      if (!user) return next()
       req.user = user
       next()
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      throw new Error(err)
+    })
 })
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn
@@ -70,6 +73,9 @@ app.use((req, res, next) => {
 app.use('/', shopRoutes)
 app.use('/admin', adminRoutes)
 app.use('/', authRoutes)
+
+//* 500 SERVER ERROR
+app.get('/500', get500)
 
 //* 404 ERROR PAGE -- Catch All
 app.use(get404)
