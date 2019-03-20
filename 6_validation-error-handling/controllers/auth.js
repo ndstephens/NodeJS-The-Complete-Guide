@@ -24,6 +24,7 @@ exports.getLogin = (req, res, next) => {
     pageTitle: 'Login',
     activeTab: 'login',
     errorMessage: msg,
+    oldInput: { email: '' },
   })
 }
 
@@ -36,6 +37,7 @@ exports.postLogin = (req, res, next) => {
       pageTitle: 'Login',
       activeTab: 'login',
       errorMessage: errors.array()[0].msg,
+      oldInput: { email },
     })
   }
 
@@ -77,11 +79,12 @@ exports.getSignup = (req, res, next) => {
     pageTitle: 'Signup',
     activeTab: 'signup',
     errorMessage: msg,
+    oldInput: { email: '' },
   })
 }
 
 exports.postSignup = (req, res, next) => {
-  const { email, password } = req.body
+  const { email, password, confirmPassword } = req.body
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
@@ -89,6 +92,7 @@ exports.postSignup = (req, res, next) => {
       pageTitle: 'Signup',
       activeTab: 'signup',
       errorMessage: errors.array()[0].msg,
+      oldInput: { email },
     })
   }
 
