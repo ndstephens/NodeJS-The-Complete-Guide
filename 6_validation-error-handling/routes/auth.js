@@ -26,10 +26,12 @@ router.post(
   [
     body('email')
       .isEmail()
-      .withMessage('Please enter a valid email'),
+      .withMessage('Please enter a valid email')
+      .normalizeEmail(),
     body('password', 'Password must be at least 5 alphanumeric characters')
       .isLength({ min: 5 })
-      .isAlphanumeric(),
+      .isAlphanumeric()
+      .trim(),
   ],
   postLogin
 )
@@ -51,18 +53,22 @@ router.post(
           }
           // if nothing is returned then it's considered a pass/true
         })
-      }),
+      })
+      .normalizeEmail(),
     body('password', 'Password must be at least 5 alphanumeric characters')
       // 'body' only checks the req.body
       // second argument is custom error message for any/all password errors
       .isLength({ min: 5 })
-      .isAlphanumeric(),
-    body('confirmPassword').custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error('Passwords must match')
-      }
-      return true
-    }),
+      .isAlphanumeric()
+      .trim(),
+    body('confirmPassword')
+      .custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error('Passwords must match')
+        }
+        return true
+      })
+      .trim(),
   ],
   postSignup
 )
