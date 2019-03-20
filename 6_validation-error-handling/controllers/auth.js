@@ -44,8 +44,12 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
     .then(user => {
       if (!user) {
-        req.flash('error', 'Invalid email or password')
-        return res.redirect('/login')
+        return res.status(422).render('auth/login', {
+          pageTitle: 'Login',
+          activeTab: 'login',
+          errorMessage: 'Invalid email',
+          oldInput: { email },
+        })
       }
 
       bcrypt
@@ -59,8 +63,12 @@ exports.postLogin = (req, res, next) => {
               res.redirect('/')
             })
           } else {
-            req.flash('error', 'Invalid email or password')
-            res.redirect('/login')
+            return res.status(422).render('auth/login', {
+              pageTitle: 'Login',
+              activeTab: 'login',
+              errorMessage: 'Invalid password',
+              oldInput: { email },
+            })
           }
         })
         .catch(err => {
