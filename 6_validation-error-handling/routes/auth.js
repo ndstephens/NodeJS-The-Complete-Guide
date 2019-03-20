@@ -21,7 +21,18 @@ const {
 
 router.get('/login', getLogin)
 
-router.post('/login', postLogin)
+router.post(
+  '/login',
+  [
+    body('email')
+      .isEmail()
+      .withMessage('Please enter a valid email'),
+    body('password', 'Password must be at least 5 alphanumeric characters')
+      .isLength({ min: 5 })
+      .isAlphanumeric(),
+  ],
+  postLogin
+)
 
 router.get('/signup', getSignup)
 
