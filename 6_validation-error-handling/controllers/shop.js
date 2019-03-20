@@ -11,7 +11,10 @@ exports.getIndex = (req, res, next) => {
         products,
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.getProducts = (req, res, next) => {
@@ -23,7 +26,10 @@ exports.getProducts = (req, res, next) => {
         products,
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.getProduct = (req, res, next) => {
@@ -35,7 +41,10 @@ exports.getProduct = (req, res, next) => {
         product,
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.getCart = (req, res, next) => {
@@ -48,21 +57,30 @@ exports.getCart = (req, res, next) => {
         products: user.cart.items,
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.postCart = (req, res, next) => {
   req.user
     .addToCart(req.body.productId)
     .then(() => res.redirect('/cart'))
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.postCartDeleteItem = (req, res, next) => {
   req.user
     .deleteFromCart(req.body.productId)
     .then(() => res.redirect('/cart'))
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.getOrders = (req, res, next) => {
@@ -74,7 +92,10 @@ exports.getOrders = (req, res, next) => {
         orders,
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.postOrder = (req, res, next) => {
@@ -100,7 +121,10 @@ exports.postOrder = (req, res, next) => {
       return req.user.clearCart()
     })
     .then(() => res.redirect('/orders'))
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 // // exports.getCheckout = (req, res, next) => {

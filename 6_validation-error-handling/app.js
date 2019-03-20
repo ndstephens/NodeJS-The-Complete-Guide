@@ -80,7 +80,7 @@ app.use(get404)
 
 //* EXPRESS ERROR HANDLER
 app.use((err, req, res, next) => {
-  // res.status(err.httpStatusCode).render(...)
+  // res.status(err.statusCode).render(...)
   console.log(err)
   res.redirect('/500')
 })

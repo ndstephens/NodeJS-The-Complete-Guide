@@ -40,7 +40,10 @@ exports.postAddProduct = (req, res, next) => {
     .then(() => {
       res.redirect('/admin/list-products')
     })
-    .catch(err => next(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.getListProducts = (req, res, next) => {
@@ -55,7 +58,10 @@ exports.getListProducts = (req, res, next) => {
         products,
       })
     })
-    .catch(err => next(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.getEditProduct = (req, res, next) => {
@@ -69,7 +75,10 @@ exports.getEditProduct = (req, res, next) => {
         product,
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.postEditProduct = (req, res, next) => {
@@ -97,12 +106,18 @@ exports.postEditProduct = (req, res, next) => {
     { new: true }
   )
     .then(() => res.redirect('/admin/list-products'))
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
 
 exports.postDeleteProduct = (req, res, next) => {
   // only all deletion if product was created by logged in user
   Product.findOneAndDelete({ _id: req.body.id, userId: req.user._id })
     .then(() => res.redirect('/admin/list-products'))
-    .catch(err => console.log(err))
+    .catch(err => {
+      err.statusCode = 500
+      next(err)
+    })
 }
