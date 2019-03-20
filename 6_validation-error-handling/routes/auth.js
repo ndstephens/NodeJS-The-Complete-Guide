@@ -25,12 +25,21 @@ router.get('/signup', getSignup)
 router.post(
   '/signup',
   [
-    check('email')
+    check('email') // 'check' will check body, params, headers, cookies, etc
       .isEmail()
+      // 'withMessage' only relates to the 'isEmail' check
       .withMessage('Please enter a valid email'),
     body('password', 'Password must be at least 5 alphanumeric characters')
+      // 'body' only checks the req.body
+      // second argument is custom error message for any/all password errors
       .isLength({ min: 5 })
       .isAlphanumeric(),
+    body('confirmPassword').custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error('Passwords must match')
+      }
+      return true
+    }),
   ],
   postSignup
 )
