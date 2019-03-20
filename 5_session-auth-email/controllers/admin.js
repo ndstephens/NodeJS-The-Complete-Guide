@@ -30,6 +30,7 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getListProducts = (req, res, next) => {
+  // only display products created by logged in user
   Product.find({ userId: req.user._id })
     // .select('title price -_id') //* only return title and price
     // .populate('userId') //* include all User info based on stored userId
@@ -63,8 +64,9 @@ exports.postEditProduct = (req, res, next) => {
   const description = req.body.description
   const imageUrl = req.body.imageUrl.trim() || undefined
 
-  Product.findByIdAndUpdate(
-    id,
+  // only allow update if product was created by logged in user
+  Product.findOneAndUpdate(
+    { _id: id, userId: req.user._id },
     { title, price, description, imageUrl },
     { new: true }
   )
@@ -73,7 +75,8 @@ exports.postEditProduct = (req, res, next) => {
 }
 
 exports.postDeleteProduct = (req, res, next) => {
-  Product.findByIdAndDelete(req.body.id)
+  // only all deletion if product was created by logged in user
+  Product.findOneAndDelete({ _id: req.body.id, userId: req.user._id })
     .then(() => res.redirect('/admin/list-products'))
     .catch(err => console.log(err))
 }
