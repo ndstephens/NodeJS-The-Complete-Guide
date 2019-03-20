@@ -22,7 +22,13 @@ router.post('/login', postLogin)
 
 router.get('/signup', getSignup)
 
-router.post('/signup', check('email').isEmail(), postSignup)
+router.post(
+  '/signup',
+  check('email')
+    .isEmail()
+    .withMessage('Please enter a valid email'),
+  postSignup
+)
 
 router.post('/logout', postLogout)
 
