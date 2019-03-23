@@ -1,4 +1,6 @@
 require('dotenv').config()
+
+const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
 
@@ -10,17 +12,29 @@ const app = express()
 const port = process.env.PORT || 8080
 
 //* MIDDLEWARE
-app.use(express.json()) // application/json
+// application/json
+app.use(express.json())
+// server static images
+app.use('/images', express.static(path.join(__dirname + 'images')))
+// FIX CORS ISSUES
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   // instead of '*' can list specific domains
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   next()
-}) //? FIX CORS ISSUES
+})
 
 //* INIT ROUTES
 app.use('/feed', feedRoutes)
+
+//
+//* ERROR HANDLING
+app.use((error, req, res, next) => {
+  console.log(error)
+  const { statusCode = 500, message } = error
+  res.status(statusCode).json({ message })
+})
 
 //
 //* RUN SERVER
