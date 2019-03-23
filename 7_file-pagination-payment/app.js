@@ -55,6 +55,7 @@ app.set('view engine', 'ejs')
 
 //* MIDDLEWARE
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/image-uploads', express.static(path.join(__dirname, 'image-uploads')))
 app.use(express.urlencoded({ extended: true }))
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')

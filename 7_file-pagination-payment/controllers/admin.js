@@ -39,7 +39,7 @@ exports.postAddProduct = (req, res, next) => {
     })
   }
 
-  const imageUrl = image.path
+  const imageUrl = `/${image.path}`
 
   const product = new Product({
     title,
@@ -113,7 +113,7 @@ exports.postEditProduct = (req, res, next) => {
   }
 
   const updateObject = image
-    ? { title, price, description, imageUrl: image.path }
+    ? { title, price, description, imageUrl: `/${image.path}` }
     : { title, price, description }
 
   // only allow update if product was created by logged in user
