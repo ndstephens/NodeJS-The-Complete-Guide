@@ -27,7 +27,7 @@ app.use('/feed', feedRoutes)
 mongoose
   .connect(process.env.MONGO_DB_URL, { useNewUrlParser: true })
   .then(() => {
-    console.log('Connected to db')
+    console.info('Connected to db')
     app.listen(port, () => console.log(`Server running on ${port}`))
   })
-  .catch(err => console.log(err))
+  .catch(err => console.info(err))
