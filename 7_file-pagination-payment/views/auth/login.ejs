@@ -1,0 +1,48 @@
+<%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/css/forms.css" />
+    <link rel="stylesheet" href="/css/auth.css" />
+  </head>
+
+  <body>
+    <%- include('../partials/nav.ejs') %>
+
+    <main>
+      <% if (errorMessage) { %>
+      <div class="user-message user-message--error"><%= errorMessage %></div>
+      <% } %>
+      <form
+        class="login-form"
+        action="/login"
+        method="POST">
+        <!-- EMAIL -->
+        <div class="form-control">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value="<%= oldInput.email %>"
+            autofocus />
+        </div>
+        <!-- PASSWORD -->
+        <div class="form-control">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password" />
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button class="btn" type="submit">
+          Login
+        </button>
+      </form>
+
+      <div class="centered">
+        <a href="/reset">Reset Password</a>
+      </div>
+    </main>
+
+<%- include('../partials/end.ejs') %>
