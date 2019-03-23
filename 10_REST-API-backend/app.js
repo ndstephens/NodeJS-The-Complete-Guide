@@ -1,10 +1,13 @@
+require('dotenv').config()
 const express = require('express')
+const mongoose = require('mongoose')
 
 //* IMPORT ROUTES
 const feedRoutes = require('./routes/feed')
 
 //* INIT APP
 const app = express()
+const port = process.env.PORT || 8080
 
 //* MIDDLEWARE
 app.use(express.json()) // application/json
@@ -21,4 +24,10 @@ app.use('/feed', feedRoutes)
 
 //
 //* RUN SERVER
-app.listen(8080, () => console.log('Server running on 8080'))
+mongoose
+  .connect(process.env.MONGO_DB_URL, { useNewUrlParser: true })
+  .then(() => {
+    console.log('Connected to db')
+    app.listen(port, () => console.log(`Server running on ${port}`))
+  })
+  .catch(err => console.log(err))
