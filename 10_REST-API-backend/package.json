@@ -11,8 +11,10 @@
   "author": "Nate Stephens <ndstephens@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
-    "express-validator": "^5.3.1"
+    "express-validator": "^5.3.1",
+    "mongoose": "^5.4.19"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
