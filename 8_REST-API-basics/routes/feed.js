@@ -1,7 +1,7 @@
 const express = require('express')
 
 //* IMPORT CONTROLLERS
-const { getPosts } = require('../controllers/feed')
+const { getPosts, createPost } = require('../controllers/feed')
 
 //* INIT ROUTER
 const router = express.Router()
@@ -9,5 +9,7 @@ const router = express.Router()
 //* ROUTES
 //? ----- '/feed'
 router.get('/posts', getPosts)
+
+router.post('/post', createPost)
 
 module.exports = router
