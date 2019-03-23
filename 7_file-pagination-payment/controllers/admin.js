@@ -13,10 +13,20 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title
-  const price = req.body.price || undefined
+  const price = req.body.price
   const description = req.body.description
-  const imageUrl = req.file
-  // const imageUrl = req.body.imageUrl.trim() || undefined
+  const image = req.file
+  // const imageUrl = req.body.imageUrl || 'https://picsum.photos/300/300/?random'
+
+  if (!image) {
+    return res.status(422).render('admin/edit-product', {
+      pageTitle: 'Admin Add Product',
+      activeTab: 'admin-add',
+      editMode: false,
+      errorMessage: 'Attached file is not an image',
+      oldInputs: { title, price, description },
+    })
+  }
 
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
@@ -25,9 +35,11 @@ exports.postAddProduct = (req, res, next) => {
       activeTab: 'admin-add',
       editMode: false,
       errorMessage: errors.array()[0].msg,
-      oldInputs: { title, price, description, imageUrl },
+      oldInputs: { title, price, description },
     })
   }
+
+  const imageUrl = image.path
 
   const product = new Product({
     title,
@@ -85,9 +97,9 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
   const id = req.body.id
   const title = req.body.title
-  const price = req.body.price || undefined
+  const price = req.body.price
   const description = req.body.description
-  const imageUrl = req.body.imageUrl.trim() || undefined
+  const image = req.file
 
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
@@ -96,16 +108,18 @@ exports.postEditProduct = (req, res, next) => {
       activeTab: 'admin-edit',
       editMode: true,
       errorMessage: errors.array()[0].msg,
-      product: { _id: id, title, price, description, imageUrl },
+      product: { _id: id, title, price, description },
     })
   }
 
+  const updateObject = image
+    ? { title, price, description, imageUrl: image.path }
+    : { title, price, description }
+
   // only allow update if product was created by logged in user
-  Product.findOneAndUpdate(
-    { _id: id, userId: req.user._id },
-    { title, price, description, imageUrl },
-    { new: true }
-  )
+  Product.findOneAndUpdate({ _id: id, userId: req.user._id }, updateObject, {
+    new: true,
+  })
     .then(() => res.redirect('/admin/list-products'))
     .catch(err => {
       err.statusCode = 500

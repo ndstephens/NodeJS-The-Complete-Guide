@@ -36,6 +36,13 @@ const fileStorage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname)
   },
 })
+const fileFilter = (req, file, cb) => {
+  if (/image\/(jpg|jpeg|png)/.test(file.mimetype)) {
+    cb(null, true)
+  } else {
+    cb(null, false)
+  }
+}
 // Session Store
 const store = new MongoDBStore({
   uri: process.env.MONGO_DB_URL,
@@ -49,7 +56,9 @@ app.set('view engine', 'ejs')
 //* MIDDLEWARE
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
-app.use(multer({ storage: fileStorage }).single('image'))
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+)
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -93,7 +102,6 @@ app.use(get404)
 //* EXPRESS ERROR HANDLER
 app.use((err, req, res, next) => {
   // res.status(err.statusCode).render(...)
-  console.log(err)
   res.redirect('/500')
 })
 
