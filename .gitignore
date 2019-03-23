@@ -1,6 +1,7 @@
 # PROJECT SPECIFIC
 data/*.*
 image-uploads/
+images/
 
 # Logs
 logs

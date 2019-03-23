@@ -21,4 +21,4 @@ app.use('/feed', feedRoutes)
 
 //
 //* RUN SERVER
-app.listen(8080)
+app.listen(8080, () => console.log('Server running on 8080'))
