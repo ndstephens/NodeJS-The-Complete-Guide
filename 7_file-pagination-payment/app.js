@@ -3,6 +3,7 @@ const path = require('path')
 
 const express = require('express')
 const mongoose = require('mongoose')
+const multer = require('multer')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
@@ -26,6 +27,15 @@ const { get404, get500 } = require('./controllers/404')
 const app = express()
 // Port
 const port = process.env.PORT || 3000
+// Multer File Storage
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'image-uploads')
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname)
+  },
+})
 // Session Store
 const store = new MongoDBStore({
   uri: process.env.MONGO_DB_URL,
@@ -39,6 +49,7 @@ app.set('view engine', 'ejs')
 //* MIDDLEWARE
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
+app.use(multer({ storage: fileStorage }).single('image'))
 app.use(
   session({
     secret: process.env.SESSION_SECRET,

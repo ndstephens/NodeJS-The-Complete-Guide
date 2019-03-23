@@ -14,7 +14,8 @@
       <form
         class="product-form"
         action="/admin/<%= editMode ? 'edit-product' : 'add-product' %>"
-        method="POST">
+        method="POST"
+        enctype="multipart/form-data">
         <!-- TITLE -->
         <div class="form-control">
           <label for="title">Title</label>
@@ -25,15 +26,23 @@
             value="<%= editMode ? product.title : oldInputs.title %>"
             autofocus />
         </div>
-        <!-- IMAGE URL -->
+        <!-- IMAGE UPLOAD -->
         <div class="form-control">
+          <label for="image">Image</label>
+          <input
+            type="file"
+            name="image"
+            id="image" />
+        </div>
+        <!-- IMAGE URL -->
+        <!-- <div class="form-control">
           <label for="imageUrl">Image URL</label>
           <input
             type="text"
             name="imageUrl"
             id="imageUrl"
             value="<%= editMode ? product.imageUrl : oldInputs.imageUrl %>" />
-        </div>
+        </div> -->
         <!-- PRICE -->
         <div class="form-control">
           <label for="price">Price</label>
