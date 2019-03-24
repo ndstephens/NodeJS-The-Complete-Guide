@@ -35,6 +35,9 @@ router.put(
   authControllers.signup
 )
 
+//? LOGIN USER
+router.post('/login')
+
 //
 //* EXPORT ROUTER
 module.exports = router
