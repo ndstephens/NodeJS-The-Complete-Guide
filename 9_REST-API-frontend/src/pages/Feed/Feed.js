@@ -22,7 +22,11 @@ class Feed extends Component {
   }
 
   componentDidMount() {
-    fetch('URL')
+    fetch(`${process.env.REACT_APP_API_URL}/auth/status`, {
+      headers: {
+        Authorization: 'Bearer ' + this.props.token,
+      },
+    })
       .then(res => {
         if (res.status !== 200) {
           throw new Error('Failed to fetch user status.')
@@ -76,7 +80,16 @@ class Feed extends Component {
 
   statusUpdateHandler = event => {
     event.preventDefault()
-    fetch('URL')
+    fetch(`${process.env.REACT_APP_API_URL}/auth/status`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: 'Bearer ' + this.props.token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        status: this.state.status,
+      }),
+    })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error("Can't update status!")
