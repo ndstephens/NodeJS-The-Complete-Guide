@@ -13,11 +13,12 @@ const router = express.Router()
 router.get('/posts', isAuth, feedController.getPosts)
 
 //? GET A SINGLE POST
-router.get('/post/:postId', feedController.getPost)
+router.get('/post/:postId', isAuth, feedController.getPost)
 
 //? CREATE A SINGLE POST
 router.post(
   '/post',
+  isAuth,
   [
     body('title')
       .isString()
@@ -34,6 +35,7 @@ router.post(
 //? UPDATE A SINGLE POST
 router.put(
   '/post/:postId',
+  isAuth,
   [
     body('title')
       .isString()
@@ -48,7 +50,7 @@ router.put(
 )
 
 //? DELETE A SINGLE POST
-router.delete('/post/:postId', feedController.deletePost)
+router.delete('/post/:postId', isAuth, feedController.deletePost)
 
 //
 //* EXPORT ROUTER

@@ -128,12 +128,16 @@ class Feed extends Component {
       url = `${process.env.REACT_APP_API_URL}/feed/post/${
         this.state.editPost._id
       }`
+
       method = 'PUT'
     }
 
     fetch(url, {
       method,
       body: formData,
+      headers: {
+        Authorization: 'Bearer ' + this.props.token,
+      },
       // headers: {
       //   'Content-Type': 'application/json',
       // },
@@ -194,6 +198,9 @@ class Feed extends Component {
     this.setState({ postsLoading: true })
     fetch(`${process.env.REACT_APP_API_URL}/feed/post/${postId}`, {
       method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + this.props.token,
+      },
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
