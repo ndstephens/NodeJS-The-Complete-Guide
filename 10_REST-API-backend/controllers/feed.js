@@ -99,7 +99,12 @@ exports.updatePost = (req, res, next) => {
     .then(post => {
       if (!post) throwError('Post not found', 404)
 
-      // clear old image from fs if image is being updated
+      // Check that user attempting to update post was its creator
+      if (post.creator.toString() !== req.userId) {
+        throwError('Not authorized', 403)
+      }
+
+      // Clear old image from fs if image is being updated
       if (imageUrl !== post.imageUrl) {
         removeImage(path.join('..', post.imageUrl))
       }
@@ -126,14 +131,20 @@ exports.deletePost = (req, res, next) => {
   Post.findById(postId)
     .then(post => {
       if (!post) throwError('Post not found', 404)
-      // Check if logged-in user is authorized
+
+      // Check that user attempting to delete post was its creator
+      if (post.creator.toString() !== req.userId) {
+        throwError('Not authorized', 403)
+      }
+
       // Clear image from fs
       removeImage(path.join('..', post.imageUrl))
+
       // Remove post from db
       return Post.findByIdAndDelete(postId)
     })
     .then(result => {
-      res.status(200).json({ message: 'Post delete', postId })
+      res.status(200).json({ message: 'Post deleted', postId })
     })
     .catch(err => {
       if (!err.statusCode) err.statusCode = 500
