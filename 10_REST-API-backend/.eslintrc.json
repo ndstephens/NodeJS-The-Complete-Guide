@@ -14,14 +14,6 @@
     "node": true
   },
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-        "trailingComma": "all",
-        "semi": false,
-        "singleQuote": true
-      }
-    ],
     "no-console": 1,
     "no-debugger": 1,
     "no-plusplus": 0,
@@ -40,6 +32,12 @@
       {
         "ignoreSiblings": true,
         "argsIgnorePattern": "req|res|next|e|^err"
+      }
+    ],
+    "no-param-reassign": [
+      2,
+      {
+        "props": false
       }
     ]
   }
