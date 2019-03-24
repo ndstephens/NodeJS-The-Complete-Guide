@@ -49,4 +49,6 @@ router.put(
 //? DELETE A SINGLE POST
 router.delete('/post/:postId', feedController.deletePost)
 
+//
+//* EXPORT ROUTER
 module.exports = router

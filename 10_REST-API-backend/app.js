@@ -7,6 +7,7 @@ const multer = require('multer')
 
 //* IMPORT ROUTES
 const feedRoutes = require('./routes/feed')
+const authRoutes = require('./routes/auth')
 
 //* INIT APP
 const app = express()
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
 
 //* INIT ROUTES
 app.use('/feed', feedRoutes)
+app.use('/auth', authRoutes)
 
 //
 //* ERROR HANDLING
@@ -60,7 +62,7 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(process.env.MONGO_DB_URL, { useNewUrlParser: true })
   .then(() => {
-    console.info('Connected to db')
+    console.log('Connected to db')
     app.listen(port, () => console.log(`Server running on ${port}`))
   })
-  .catch(err => console.info(err))
+  .catch(err => console.log(err))
