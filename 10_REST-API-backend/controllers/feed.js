@@ -143,7 +143,15 @@ exports.deletePost = (req, res, next) => {
       // Remove post from db
       return Post.findByIdAndDelete(postId)
     })
-    .then(result => {
+    .then(() => {
+      return User.findById(req.userId)
+    })
+    .then(user => {
+      // helpful Mongoose method 'pull'
+      user.posts.pull(postId)
+      return user.save()
+    })
+    .then(() => {
       res.status(200).json({ message: 'Post deleted', postId })
     })
     .catch(err => {
