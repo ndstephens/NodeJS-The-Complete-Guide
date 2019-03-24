@@ -5,6 +5,7 @@ const throwError = require('../utils/throw-error')
 const removeImage = require('../utils/remove-image')
 
 const Post = require('../models/post')
+const User = require('../models/user')
 
 //? GET ALL POSTS
 exports.getPosts = (req, res, next) => {
@@ -50,6 +51,7 @@ exports.createPost = (req, res, next) => {
   handleValidationErrors(req)
   if (!req.file) throwError('No image provided', 422)
 
+  let creator
   const { title, content } = req.body
   const imageUrl = req.file.path
 
@@ -57,17 +59,24 @@ exports.createPost = (req, res, next) => {
     title,
     content,
     imageUrl,
-    creator: {
-      name: 'Nate',
-    },
+    creator: req.userId,
   })
 
   post
     .save()
-    .then(result => {
+    .then(() => {
+      return User.findById(req.userId)
+    })
+    .then(user => {
+      creator = user
+      user.posts.push(post)
+      return user.save()
+    })
+    .then(() => {
       res.status(201).json({
         message: 'Post created',
-        post: result,
+        post,
+        creator: { _id: creator._id, name: creator.name },
       })
     })
     .catch(err => {
