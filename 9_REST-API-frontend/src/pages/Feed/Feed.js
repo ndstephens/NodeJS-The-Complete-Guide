@@ -59,7 +59,10 @@ class Feed extends Component {
       })
       .then(resData => {
         this.setState({
-          posts: resData.posts,
+          posts: resData.posts.map(post => ({
+            ...post,
+            imagePath: post.imageUrl,
+          })),
           totalPosts: resData.totalItems,
           postsLoading: false,
         })
@@ -105,17 +108,23 @@ class Feed extends Component {
     this.setState({
       editLoading: true,
     })
+
     // Since we're including an image file, must use FormData
     const formData = new FormData()
     formData.append('title', postData.title)
     formData.append('content', postData.content)
     formData.append('image', postData.image)
 
+    // Creating a new post
     let url = `${process.env.REACT_APP_API_URL}/feed/post`
     let method = 'POST'
 
+    // Editing a post
     if (this.state.editPost) {
-      url = 'URL'
+      url = `${process.env.REACT_APP_API_URL}/feed/post/${
+        this.state.editPost._id
+      }`
+      method = 'PUT'
     }
 
     fetch(url, {

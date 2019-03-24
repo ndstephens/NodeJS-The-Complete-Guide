@@ -2,7 +2,12 @@ const express = require('express')
 const { body } = require('express-validator/check')
 
 //* IMPORT CONTROLLERS
-const { getPosts, createPost, getPost } = require('../controllers/feed')
+const {
+  getPosts,
+  createPost,
+  getPost,
+  updatePost,
+} = require('../controllers/feed')
 
 //* INIT ROUTER
 const router = express.Router()
@@ -27,5 +32,20 @@ router.post(
 )
 
 router.get('/post/:postId', getPost)
+
+router.put(
+  '/post/:postId',
+  [
+    body('title')
+      .isString()
+      .trim()
+      .isLength({ min: 5 }),
+    body('content')
+      .isString()
+      .trim()
+      .isLength({ min: 5 }),
+  ],
+  updatePost
+)
 
 module.exports = router
