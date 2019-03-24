@@ -12,9 +12,9 @@ const app = express()
 const port = process.env.PORT || 8080
 
 //* MIDDLEWARE
-// application/json
+// JSON PARSING
 app.use(express.json())
-// server static images
+// STATIC IMAGES
 app.use('/images', express.static(path.join(__dirname, 'images')))
 // FIX CORS ISSUES
 app.use((req, res, next) => {
