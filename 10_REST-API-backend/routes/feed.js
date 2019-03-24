@@ -1,5 +1,6 @@
 const express = require('express')
 const { body } = require('express-validator/check')
+const isAuth = require('../middleware/is-auth')
 
 //* IMPORT CONTROLLERS
 const feedController = require('../controllers/feed')
@@ -9,7 +10,7 @@ const router = express.Router()
 
 //* ROUTES  --------   '/feed'
 //? GET ALL POSTS
-router.get('/posts', feedController.getPosts)
+router.get('/posts', isAuth, feedController.getPosts)
 
 //? GET A SINGLE POST
 router.get('/post/:postId', feedController.getPost)
