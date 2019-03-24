@@ -9,6 +9,7 @@ const handleValidationErrors = (
   if (!errors.isEmpty()) {
     const error = new Error(msg)
     error.statusCode = statusCode
+    error.data = errors.array()
     throw error
   }
 }

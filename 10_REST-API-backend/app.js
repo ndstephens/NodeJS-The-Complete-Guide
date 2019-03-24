@@ -53,8 +53,8 @@ app.use('/auth', authRoutes)
 //* ERROR HANDLING
 app.use((error, req, res, next) => {
   console.log(error)
-  const { statusCode = 500, message } = error
-  res.status(statusCode).json({ message })
+  const { statusCode = 500, message = '', data = [] } = error
+  res.status(statusCode).json({ message, data })
 })
 
 //
