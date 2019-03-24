@@ -9,9 +9,21 @@ const Post = require('../models/post')
 
 //? GET ALL POSTS
 exports.getPosts = (req, res, next) => {
+  // Includes pagination
+  const currentPage = req.query.page || 1
+  const postsPerPage = 2
+  let totalItems
+
   Post.find()
+    .countDocuments()
+    .then(count => {
+      totalItems = count
+      return Post.find()
+        .skip((currentPage - 1) * postsPerPage)
+        .limit(postsPerPage)
+    })
     .then(posts => {
-      res.status(200).json({ message: 'Posts found', posts })
+      res.status(200).json({ message: 'Posts found', posts, totalItems })
     })
     .catch(err => {
       if (!err.statusCode) err.statusCode = 500
