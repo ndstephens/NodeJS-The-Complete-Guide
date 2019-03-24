@@ -1,8 +1,8 @@
 const path = require('path')
 
-const handleValidationErrors = require('../utils/handleValidationErrors')
-const throwError = require('../utils/throwError')
-const removeImage = require('../utils/removeImage')
+const handleValidationErrors = require('../utils/handle-validation-errors')
+const throwError = require('../utils/throw-error')
+const removeImage = require('../utils/remove-image')
 
 const Post = require('../models/post')
 

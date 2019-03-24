@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const User = require('../models/user')
-const handleValidationErrors = require('../utils/handleValidationErrors')
-const throwError = require('../utils/throwError')
+const handleValidationErrors = require('../utils/handle-validation-errors')
+const throwError = require('../utils/throw-error')
 
 //? CREATE OR UPDATE USER
 exports.signup = (req, res, next) => {
