@@ -1,5 +1,4 @@
 const path = require('path')
-// const { validationResult } = require('express-validator/check')
 
 const handleValidationErrors = require('../utils/handleValidationErrors')
 const throwError = require('../utils/throwError')
