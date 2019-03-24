@@ -21,6 +21,7 @@
     "func-names": 0,
     "no-prototype-builtins": 0,
     "no-continue": 0,
+    "prefer-promise-reject-errors": 0,
     "no-restricted-syntax": [
       2,
       "ForInStatement",
