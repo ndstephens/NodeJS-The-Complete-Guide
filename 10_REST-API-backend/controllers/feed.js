@@ -19,6 +19,21 @@ exports.getPosts = (req, res, next) => {
     })
 }
 
+//? GET A SINGLE POST
+exports.getPost = (req, res, next) => {
+  const { postId } = req.params
+
+  Post.findById(postId)
+    .then(post => {
+      if (!post) throwError('Post not found', 404)
+      res.status(200).json({ message: 'Post found', post })
+    })
+    .catch(err => {
+      if (!err.statusCode) err.statusCode = 500
+      next(err)
+    })
+}
+
 //? CREATE A SINGLE POST
 exports.createPost = (req, res, next) => {
   handleValidationErrors(req)
@@ -43,21 +58,6 @@ exports.createPost = (req, res, next) => {
         message: 'Post created successfully',
         post: result,
       })
-    })
-    .catch(err => {
-      if (!err.statusCode) err.statusCode = 500
-      next(err)
-    })
-}
-
-//? GET A SINGLE POST
-exports.getPost = (req, res, next) => {
-  const { postId } = req.params
-
-  Post.findById(postId)
-    .then(post => {
-      if (!post) throwError('Post not found', 404)
-      res.status(200).json({ message: 'Post found', post })
     })
     .catch(err => {
       if (!err.statusCode) err.statusCode = 500
