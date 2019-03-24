@@ -1,9 +1,11 @@
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const User = require('../models/user')
 const handleValidationErrors = require('../utils/handleValidationErrors')
 const throwError = require('../utils/throwError')
 
+//? CREATE OR UPDATE USER
 exports.signup = (req, res, next) => {
   handleValidationErrors(req)
 
@@ -28,6 +30,7 @@ exports.signup = (req, res, next) => {
     })
 }
 
+//? LOGIN USER
 exports.login = (req, res, next) => {
   const { email, password } = req.body
   let foundUser
@@ -35,12 +38,24 @@ exports.login = (req, res, next) => {
   User.findOne({ email })
     .then(user => {
       if (!user) throwError('User not found', 404)
+
       foundUser = user
       return bcrypt.compare(password, user.password)
     })
     .then(isCorrectPassword => {
       if (!isCorrectPassword) throwError('Incorrect password', 401)
-      //
+
+      // Create a JWT that expires in 1 hour
+      const token = jwt.sign(
+        {
+          email: foundUser.email,
+          userId: foundUser._id.toString(),
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      )
+
+      res.status(200).json({ token, userId: foundUser._id.toString() })
     })
     .catch(err => {
       if (!err.statusCode) err.statusCode = 500

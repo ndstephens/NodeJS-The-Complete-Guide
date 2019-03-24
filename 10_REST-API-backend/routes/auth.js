@@ -36,7 +36,7 @@ router.put(
 )
 
 //? LOGIN USER
-router.post('/login')
+router.post('/login', authControllers.login)
 
 //
 //* EXPORT ROUTER
