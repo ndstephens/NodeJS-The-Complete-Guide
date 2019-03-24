@@ -2,22 +2,17 @@ const express = require('express')
 const { body } = require('express-validator/check')
 
 //* IMPORT CONTROLLERS
-const {
-  getPosts,
-  getPost,
-  createPost,
-  updatePost,
-} = require('../controllers/feed')
+const feedController = require('../controllers/feed')
 
 //* INIT ROUTER
 const router = express.Router()
 
 //* ROUTES  --------   '/feed'
 //? GET ALL POSTS
-router.get('/posts', getPosts)
+router.get('/posts', feedController.getPosts)
 
 //? GET A SINGLE POST
-router.get('/post/:postId', getPost)
+router.get('/post/:postId', feedController.getPost)
 
 //? CREATE A SINGLE POST
 router.post(
@@ -32,7 +27,7 @@ router.post(
       .trim()
       .isLength({ min: 5 }),
   ],
-  createPost
+  feedController.createPost
 )
 
 //? UPDATE A SINGLE POST
@@ -48,7 +43,10 @@ router.put(
       .trim()
       .isLength({ min: 5 }),
   ],
-  updatePost
+  feedController.updatePost
 )
+
+//? DELETE A SINGLE POST
+router.delete('/post/:postId', feedController.deletePost)
 
 module.exports = router

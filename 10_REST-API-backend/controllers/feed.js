@@ -77,9 +77,9 @@ exports.updatePost = (req, res, next) => {
 
   Post.findById(postId)
     .then(post => {
-      if (!postId) throwError('Post not found', 404)
+      if (!post) throwError('Post not found', 404)
 
-      // clear old image if image is being updated
+      // clear old image from fs if image is being updated
       if (imageUrl !== post.imageUrl) {
         removeImage(path.join('..', post.imageUrl))
       }
@@ -92,6 +92,28 @@ exports.updatePost = (req, res, next) => {
     })
     .then(result => {
       res.status(200).json({ message: 'Post updated', post: result })
+    })
+    .catch(err => {
+      if (!err.statusCode) err.statusCode = 500
+      next(err)
+    })
+}
+
+//? DELETE A SINGLE POST
+exports.deletePost = (req, res, next) => {
+  const { postId } = req.params
+
+  Post.findById(postId)
+    .then(post => {
+      if (!post) throwError('Post not found', 404)
+      // Check if logged-in user is authorized
+      // Clear image from fs
+      removeImage(path.join('..', post.imageUrl))
+      // Remove post from db
+      return Post.findByIdAndDelete(postId)
+    })
+    .then(result => {
+      res.status(200).json({ message: 'Post delete', postId })
     })
     .catch(err => {
       if (!err.statusCode) err.statusCode = 500
