@@ -15,7 +15,7 @@ const port = process.env.PORT || 8080
 // application/json
 app.use(express.json())
 // server static images
-app.use('/images', express.static(path.join(__dirname + 'images')))
+app.use('/images', express.static(path.join(__dirname, 'images')))
 // FIX CORS ISSUES
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
