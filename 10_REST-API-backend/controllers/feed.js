@@ -8,50 +8,47 @@ const Post = require('../models/post')
 const User = require('../models/user')
 
 //? GET ALL POSTS
-exports.getPosts = (req, res, next) => {
+exports.getPosts = async (req, res, next) => {
   // Includes pagination
   const currentPage = req.query.page || 1
   const postsPerPage = 2
-  let totalItems
 
-  Post.find()
-    .countDocuments()
-    .then(count => {
-      totalItems = count
-      return Post.find()
-        .skip((currentPage - 1) * postsPerPage)
-        .limit(postsPerPage)
-    })
-    .then(posts => {
-      res.status(200).json({ message: 'Posts found', posts, totalItems })
-    })
-    .catch(err => {
-      if (!err.statusCode) err.statusCode = 500
-      next(err)
-    })
+  try {
+    const totalItems = await Post.find().countDocuments()
+
+    const posts = await Post.find()
+      .populate('creator')
+      .skip((currentPage - 1) * postsPerPage)
+      .limit(postsPerPage)
+
+    res.status(200).json({ message: 'Posts found', posts, totalItems })
+  } catch (err) {
+    if (!err.statusCode) err.statusCode = 500
+    next(err)
+  }
 }
 
 //? GET A SINGLE POST
-exports.getPost = (req, res, next) => {
+exports.getPost = async (req, res, next) => {
   const { postId } = req.params
 
-  Post.findById(postId)
-    .then(post => {
-      if (!post) throwError('Post not found', 404)
-      res.status(200).json({ message: 'Post found', post })
-    })
-    .catch(err => {
-      if (!err.statusCode) err.statusCode = 500
-      next(err)
-    })
+  try {
+    const post = await Post.findById(postId)
+    if (!post) throwError('Post not found', 404)
+
+    res.status(200).json({ message: 'Post found', post })
+  } catch (err) {
+    if (!err.statusCode) err.statusCode = 500
+    next(err)
+  }
 }
 
 //? CREATE A SINGLE POST
-exports.createPost = (req, res, next) => {
+exports.createPost = async (req, res, next) => {
   handleValidationErrors(req)
+  // requires an uploaded image
   if (!req.file) throwError('No image provided', 422)
 
-  let creator
   const { title, content } = req.body
   const imageUrl = req.file.path
 
@@ -62,100 +59,90 @@ exports.createPost = (req, res, next) => {
     creator: req.userId,
   })
 
-  post
-    .save()
-    .then(() => {
-      return User.findById(req.userId)
+  try {
+    await post.save()
+
+    // Add post to logged-in User
+    const user = await User.findById(req.userId)
+    // Mongoose will handle adding only the post._id since that's what the User's schema is accepting
+    user.posts.push(post)
+    await user.save()
+
+    res.status(201).json({
+      message: 'Post created',
+      post,
+      creator: { _id: user._id, name: user.name },
     })
-    .then(user => {
-      creator = user
-      user.posts.push(post)
-      return user.save()
-    })
-    .then(() => {
-      res.status(201).json({
-        message: 'Post created',
-        post,
-        creator: { _id: creator._id, name: creator.name },
-      })
-    })
-    .catch(err => {
-      if (!err.statusCode) err.statusCode = 500
-      next(err)
-    })
+  } catch (err) {
+    if (!err.statusCode) err.statusCode = 500
+    next(err)
+  }
 }
 
 //? UPDATE A SINGLE POST
-exports.updatePost = (req, res, next) => {
+exports.updatePost = async (req, res, next) => {
   handleValidationErrors(req)
 
   const { postId } = req.params
   const { title, content } = req.body
-  const imageUrl = req.file ? req.file.path : req.body.image
 
+  // Use new image if one is provided, otherwise use current image
+  const imageUrl = req.file ? req.file.path : req.body.image
   if (!imageUrl) throwError('Image not selected', 422)
 
-  Post.findById(postId)
-    .then(post => {
-      if (!post) throwError('Post not found', 404)
+  try {
+    const post = await Post.findById(postId)
+    if (!post) throwError('Post not found', 404)
+    // Check that user attempting to update post was its creator
+    if (post.creator.toString() !== req.userId) {
+      throwError('Not authorized', 403)
+    }
 
-      // Check that user attempting to update post was its creator
-      if (post.creator.toString() !== req.userId) {
-        throwError('Not authorized', 403)
-      }
+    // Clear old image from fs if image is being updated
+    if (imageUrl !== post.imageUrl) {
+      removeImage(path.join('..', post.imageUrl))
+    }
 
-      // Clear old image from fs if image is being updated
-      if (imageUrl !== post.imageUrl) {
-        removeImage(path.join('..', post.imageUrl))
-      }
+    post.title = title
+    post.content = content
+    post.imageUrl = imageUrl
 
-      post.title = title
-      post.content = content
-      post.imageUrl = imageUrl
+    const savedPost = await post.save()
 
-      return post.save()
-    })
-    .then(result => {
-      res.status(200).json({ message: 'Post updated', post: result })
-    })
-    .catch(err => {
-      if (!err.statusCode) err.statusCode = 500
-      next(err)
-    })
+    res.status(200).json({ message: 'Post updated', post: savedPost })
+  } catch (err) {
+    if (!err.statusCode) err.statusCode = 500
+    next(err)
+  }
 }
 
 //? DELETE A SINGLE POST
-exports.deletePost = (req, res, next) => {
+exports.deletePost = async (req, res, next) => {
   const { postId } = req.params
 
-  Post.findById(postId)
-    .then(post => {
-      if (!post) throwError('Post not found', 404)
+  try {
+    const post = await Post.findById(postId)
+    if (!post) throwError('Post not found', 404)
+    // Check that user attempting to delete post was its creator
+    if (post.creator.toString() !== req.userId) {
+      throwError('Not authorized', 403)
+    }
 
-      // Check that user attempting to delete post was its creator
-      if (post.creator.toString() !== req.userId) {
-        throwError('Not authorized', 403)
-      }
+    // Clear image from fs
+    removeImage(path.join('..', post.imageUrl))
 
-      // Clear image from fs
-      removeImage(path.join('..', post.imageUrl))
+    // Remove post from db
+    await Post.findByIdAndDelete(postId)
 
-      // Remove post from db
-      return Post.findByIdAndDelete(postId)
-    })
-    .then(() => {
-      return User.findById(req.userId)
-    })
-    .then(user => {
-      // helpful Mongoose method 'pull'
-      user.posts.pull(postId)
-      return user.save()
-    })
-    .then(() => {
-      res.status(200).json({ message: 'Post deleted', postId })
-    })
-    .catch(err => {
-      if (!err.statusCode) err.statusCode = 500
-      next(err)
-    })
+    // fetch User object
+    const user = await User.findById(req.userId)
+    // helpful Mongoose method 'pull' to remove deleted post from User
+    user.posts.pull(postId)
+    await user.save()
+
+    res.status(200).json({ message: 'Post deleted', postId })
+  } catch (err) {
+    if (!err.statusCode) err.statusCode = 500
+    next(err)
+  }
 }
