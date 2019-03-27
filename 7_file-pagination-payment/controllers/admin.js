@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 const Product = require('../models/product')
 const { validationResult } = require('express-validator/check')
 
@@ -112,9 +114,21 @@ exports.postEditProduct = (req, res, next) => {
     })
   }
 
+  // update image field only if new image was uploaded
   const updateObject = image
     ? { title, price, description, imageUrl: `/${image.path}` }
     : { title, price, description }
+
+  // delete old image if updated
+  if (image) {
+    Product.findById(id)
+      .then(product => {
+        fs.unlink(product.imageUrl.replace('/', ''), err => {
+          if (err) throw err
+        })
+      })
+      .catch(err => next(err))
+  }
 
   // only allow update if product was created by logged in user
   Product.findOneAndUpdate({ _id: id, userId: req.user._id }, updateObject, {
@@ -128,7 +142,7 @@ exports.postEditProduct = (req, res, next) => {
 }
 
 exports.postDeleteProduct = (req, res, next) => {
-  // only all deletion if product was created by logged in user
+  // only allow deletion if product was created by logged in user
   Product.findOneAndDelete({ _id: req.body.id, userId: req.user._id })
     .then(() => res.redirect('/admin/list-products'))
     .catch(err => {
