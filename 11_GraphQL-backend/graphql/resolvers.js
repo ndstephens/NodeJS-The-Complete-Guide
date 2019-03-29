@@ -96,12 +96,16 @@ exports.createPost = async (args, req) => {
   }
 }
 
-exports.posts = async (args, req) => {
+exports.posts = async ({ page = 1 }, req) => {
   if (!req.isAuth) throwError('Not authenticated', 401)
+
+  const perPage = 2
 
   const totalPosts = await Post.find().countDocuments()
   const posts = await Post.find()
     .sort({ createdAt: -1 })
+    .skip((page - 1) * perPage)
+    .limit(perPage)
     .populate('creator')
 
   return {
