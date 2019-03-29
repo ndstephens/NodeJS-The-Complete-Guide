@@ -7,6 +7,7 @@ const multer = require('multer')
 const graphqlHttp = require('express-graphql')
 
 const auth = require('./middleware/auth')
+const removeImage = require('./utils/remove-image')
 
 //? IMPORT GRAPHQL SCHEMA AND RESOLVER
 const graphqlSchema = require('./graphql/schema')
@@ -16,6 +17,7 @@ const graphqlResolver = require('./graphql/resolvers')
 const app = express()
 const port = process.env.PORT || 8080
 
+//? MULTER file handling config
 const filestorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'images')
@@ -52,6 +54,19 @@ app.use((req, res, next) => {
 })
 // JWT AUTH
 app.use(auth)
+// UPLOADED IMAGE HANDLING
+app.put('/post-image', (req, res, next) => {
+  if (!req.isAuth) throw new Error('Not authenticated')
+  if (!req.file) {
+    return res.status(200).json({ message: 'No file provided' })
+  }
+
+  if (req.body.oldPath) removeImage(req.body.oldPath)
+
+  return res
+    .status(201)
+    .json({ message: 'File stored', filePath: req.file.path })
+})
 
 //* GRAPHQL 'ROUTE'
 app.use(

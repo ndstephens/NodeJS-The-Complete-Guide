@@ -148,41 +148,53 @@ class Feed extends Component {
     })
 
     // Since we're including an image file, must use FormData
-    // const formData = new FormData()
-    // formData.append('title', postData.title)
-    // formData.append('content', postData.content)
-    // formData.append('image', postData.image)
-
-    let graphqlQuery = {
-      query: `
-        mutation {
-          createPost(postInput: {
-            title: "${postData.title}"
-            content: "${postData.content}"
-            imageUrl: "fakeUrlString"
-          })
-          {
-            _id
-            title
-            content
-            imageUrl
-            creator {
-              name
-            }
-            createdAt
-          }
-        }
-      `,
+    const formData = new FormData()
+    formData.append('image', postData.image)
+    if (this.state.editPost) {
+      formData.append('oldPath', this.state.editPost.imagePath)
     }
-
-    fetch(`${process.env.REACT_APP_API_URL}/graphql`, {
-      method: 'POST',
-      body: JSON.stringify(graphqlQuery),
+    fetch(`${process.env.REACT_APP_API_URL}/post-image`, {
+      method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + this.props.token,
-        'Content-Type': 'application/json',
       },
+      body: formData,
     })
+      .then(res => res.json())
+      .then(fileData => {
+        const imageUrl = fileData.filePath
+
+        let graphqlQuery = {
+          query: `
+            mutation {
+              createPost(postInput: {
+                title: "${postData.title}"
+                content: "${postData.content}"
+                imageUrl: "${imageUrl}"
+              })
+              {
+                _id
+                title
+                content
+                imageUrl
+                creator {
+                  name
+                }
+                createdAt
+              }
+            }
+          `,
+        }
+
+        return fetch(`${process.env.REACT_APP_API_URL}/graphql`, {
+          method: 'POST',
+          body: JSON.stringify(graphqlQuery),
+          headers: {
+            Authorization: 'Bearer ' + this.props.token,
+            'Content-Type': 'application/json',
+          },
+        })
+      })
       .then(res => {
         return res.json()
       })
@@ -203,6 +215,7 @@ class Feed extends Component {
           content: postData.content,
           creator: postData.creator,
           createdAt: postData.createdAt,
+          imagePath: postData.imageUrl,
         }
         this.setState(prevState => {
           let updatedPosts = [...prevState.posts]
