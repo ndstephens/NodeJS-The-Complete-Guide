@@ -59,33 +59,43 @@ class App extends Component {
   loginHandler = (event, authData) => {
     event.preventDefault()
     this.setState({ authLoading: true })
-    fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+
+    const graphqlQuery = {
+      query: `{
+        login(email: "${authData.email}", password: "${authData.password}")
+          {
+            token
+            userId
+          }
+      }`,
+    }
+    fetch(`${process.env.REACT_APP_API_URL}/graphql`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email: authData.email,
-        password: authData.password,
-      }),
+      body: JSON.stringify(graphqlQuery),
     })
       .then(res => {
-        if (res.status === 422) {
-          throw new Error('Validation failed.')
-        }
-        if (res.status !== 200 && res.status !== 201) {
-          console.log('Error!')
-          throw new Error('Could not authenticate you!')
-        }
         return res.json()
       })
       .then(resData => {
-        // console.log(resData)
+        if (resData.errors && resData.errors[0].status === 422) {
+          throw new Error(
+            "Validation failed. Make sure the email address isn't used yet!"
+          )
+        }
+        if (resData.errors) {
+          throw new Error('User login failed')
+        }
+
+        console.log(resData)
+        const { token, userId } = resData.data.login
         this.setState({
           isAuth: true,
-          token: resData.token,
+          token,
           authLoading: false,
-          userId: resData.userId,
+          userId,
         })
         localStorage.setItem('token', resData.token)
         localStorage.setItem('userId', resData.userId)
@@ -146,6 +156,7 @@ class App extends Component {
         if (resData.errors) {
           throw new Error('User creation failed')
         }
+
         console.log(resData)
         this.setState({ isAuth: false, authLoading: false })
         this.props.history.replace('/')
