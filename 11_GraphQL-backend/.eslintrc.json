@@ -1,0 +1,46 @@
+{
+  "extends": ["airbnb", "prettier"],
+  "plugins": ["prettier"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "impliedStrict": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "no-console": 1,
+    "no-debugger": 1,
+    "no-plusplus": 0,
+    "spaced-comment": 0,
+    "func-names": 0,
+    "no-prototype-builtins": 0,
+    "no-continue": 0,
+    "prefer-promise-reject-errors": 0,
+    "no-underscore-dangle": 0,
+    "no-restricted-syntax": [
+      2,
+      "ForInStatement",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "no-unused-vars": [
+      1,
+      {
+        "ignoreSiblings": true,
+        "argsIgnorePattern": "req|res|next|e|^err"
+      }
+    ],
+    "no-param-reassign": [
+      2,
+      {
+        "props": false
+      }
+    ]
+  }
+}
