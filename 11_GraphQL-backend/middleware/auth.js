@@ -1,12 +1,10 @@
 const jwt = require('jsonwebtoken')
 
-const throwError = require('../utils/throw-error')
-
 module.exports = (req, res, next) => {
   const authHeader = req.get('Authorization')
-
   if (!authHeader) {
-    throwError('Not authenticated', 401)
+    req.isAuth = false
+    return next()
   }
 
   const token = authHeader.replace('Bearer ', '')
@@ -15,14 +13,16 @@ module.exports = (req, res, next) => {
   try {
     decodedToken = jwt.verify(token, process.env.JWT_SECRET)
   } catch (err) {
-    err.statusCode = 500
-    throw err
+    req.isAuth = false
+    return next()
   }
 
   if (!decodedToken) {
-    throwError('Not authenticated', 401)
+    req.isAuth = false
+    return next()
   }
 
   req.userId = decodedToken.userId
+  req.isAuth = true
   next()
 }

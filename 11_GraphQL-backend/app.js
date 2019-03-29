@@ -6,6 +6,8 @@ const mongoose = require('mongoose')
 const multer = require('multer')
 const graphqlHttp = require('express-graphql')
 
+const auth = require('./middleware/auth')
+
 //? IMPORT GRAPHQL SCHEMA AND RESOLVER
 const graphqlSchema = require('./graphql/schema')
 const graphqlResolver = require('./graphql/resolvers')
@@ -48,6 +50,8 @@ app.use((req, res, next) => {
   }
   next()
 })
+// JWT AUTH
+app.use(auth)
 
 //* GRAPHQL 'ROUTE'
 app.use(

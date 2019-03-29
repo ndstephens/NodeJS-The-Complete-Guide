@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
 
+const throwError = require('../utils/throw-error')
 const User = require('../models/user')
 const Post = require('../models/post')
 
@@ -19,18 +20,10 @@ exports.createUser = async (args, req) => {
   ) {
     errors.push({ message: 'Password too short' })
   }
-
-  if (errors.length > 0) {
-    const error = new Error('Invalid input')
-    error.data = errors
-    error.code = 422
-    throw error
-  }
+  if (errors.length > 0) throwError('Invalid input', 422, errors)
 
   const isExistingUser = await User.findOne({ email })
-  if (isExistingUser) {
-    throw new Error('User already exists')
-  }
+  if (isExistingUser) throwError('User already exists', 400)
 
   const hashedPw = await bcrypt.hash(password, 8)
 
@@ -48,18 +41,10 @@ exports.createUser = async (args, req) => {
 //? LOGIN
 exports.login = async ({ email, password }) => {
   const user = await User.findOne({ email })
-  if (!user) {
-    const error = new Error('User not found')
-    error.code = 401
-    throw error
-  }
+  if (!user) throwError('User not found', 401)
 
   const isEqual = await bcrypt.compare(password, user.password)
-  if (!isEqual) {
-    const error = new Error('Password is incorrect')
-    error.code = 401
-    throw error
-  }
+  if (!isEqual) throwError('Password is incorrect', 401)
 
   const token = jwt.sign(
     {
@@ -76,6 +61,8 @@ exports.login = async ({ email, password }) => {
 //
 //? CREATE POST
 exports.createPost = async (args, req) => {
+  if (!req.isAuth) throwError('Not authenticated', 401)
+
   const { title, content, imageUrl } = args.postInput
 
   const errors = []
@@ -85,22 +72,21 @@ exports.createPost = async (args, req) => {
   if (validator.isEmpty(content) || !validator.isLength(content, { min: 5 })) {
     errors.push({ message: 'Content is invalid' })
   }
+  if (errors.length > 0) throwError('Invalid input', 422, errors)
 
-  if (errors.length > 0) {
-    const error = new Error('Invalid input')
-    error.data = errors
-    error.code = 422
-    throw error
-  }
+  const user = await User.findById(req.userId)
+  if (!user) throwError('User not found', 404)
 
   const post = new Post({
     title,
     content,
     imageUrl,
+    creator: user,
   })
   const createdPost = await post.save()
 
-  // add post to user's posts
+  user.posts.push(createdPost)
+  await user.save()
 
   return {
     ...createdPost._doc,
