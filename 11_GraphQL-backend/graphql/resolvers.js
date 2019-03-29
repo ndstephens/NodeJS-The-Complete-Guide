@@ -95,3 +95,24 @@ exports.createPost = async (args, req) => {
     updatedAt: createdPost.updatedAt.toISOString(),
   }
 }
+
+exports.posts = async (args, req) => {
+  if (!req.isAuth) throwError('Not authenticated', 401)
+
+  const totalPosts = await Post.find().countDocuments()
+  const posts = await Post.find()
+    .sort({ createdAt: -1 })
+    .populate('creator')
+
+  return {
+    totalPosts,
+    posts: posts.map(p => {
+      return {
+        ...p._doc,
+        _id: p._id.toString(),
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
+      }
+    }),
+  }
+}
