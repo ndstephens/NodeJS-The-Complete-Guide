@@ -97,8 +97,8 @@ class App extends Component {
           authLoading: false,
           userId,
         })
-        localStorage.setItem('token', resData.token)
-        localStorage.setItem('userId', resData.userId)
+        localStorage.setItem('token', token)
+        localStorage.setItem('userId', userId)
         const remainingMilliseconds = 60 * 60 * 1000
         const expiryDate = new Date(
           new Date().getTime() + remainingMilliseconds

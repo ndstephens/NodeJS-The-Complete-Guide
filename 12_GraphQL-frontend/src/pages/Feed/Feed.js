@@ -54,24 +54,45 @@ class Feed extends Component {
       page--
       this.setState({ postPage: page })
     }
-    fetch(`${process.env.REACT_APP_API_URL}/feed/posts?page=${page}`, {
+
+    const graphqlQuery = {
+      query: `{
+        posts {
+          totalPosts
+          posts {
+            _id
+            title
+            content
+            imageUrl
+            creator {
+              name
+            }
+            createdAt
+          }
+        }
+      }`,
+    }
+    fetch(`${process.env.REACT_APP_API_URL}/graphql`, {
+      method: 'POST',
       headers: {
         Authorization: 'Bearer ' + this.props.token,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify(graphqlQuery),
     })
       .then(res => {
-        if (res.status !== 200) {
-          throw new Error('Failed to fetch posts.')
-        }
         return res.json()
       })
       .then(resData => {
+        if (resData.errors) {
+          throw new Error('Posts not found')
+        }
         this.setState({
-          posts: resData.posts.map(post => ({
+          posts: resData.data.posts.posts.map(post => ({
             ...post,
             imagePath: post.imageUrl,
           })),
-          totalPosts: resData.totalItems,
+          totalPosts: resData.data.posts.totalPosts,
           postsLoading: false,
         })
       })
@@ -190,8 +211,8 @@ class Feed extends Component {
               p => p._id === prevState.editPost._id
             )
             updatedPosts[postIndex] = post
-          } else if (prevState.posts.length < 2) {
-            updatedPosts = prevState.posts.concat(post)
+          } else {
+            updatedPosts.unshift(post)
           }
           return {
             posts: updatedPosts,
