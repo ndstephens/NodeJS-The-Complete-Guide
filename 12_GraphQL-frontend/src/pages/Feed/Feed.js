@@ -127,52 +127,61 @@ class Feed extends Component {
     })
 
     // Since we're including an image file, must use FormData
-    const formData = new FormData()
-    formData.append('title', postData.title)
-    formData.append('content', postData.content)
-    formData.append('image', postData.image)
+    // const formData = new FormData()
+    // formData.append('title', postData.title)
+    // formData.append('content', postData.content)
+    // formData.append('image', postData.image)
 
-    // Creating a new post
-    let url = `${process.env.REACT_APP_API_URL}/feed/post`
-    let method = 'POST'
-
-    // Editing a post
-    if (this.state.editPost) {
-      url = `${process.env.REACT_APP_API_URL}/feed/post/${
-        this.state.editPost._id
-      }`
-
-      method = 'PUT'
+    let graphqlQuery = {
+      query: `
+        mutation {
+          createPost(postInput: {
+            title: "${postData.title}"
+            content: "${postData.content}"
+            imageUrl: "fakeUrlString"
+          })
+          {
+            _id
+            title
+            content
+            imageUrl
+            creator {
+              name
+            }
+            createdAt
+          }
+        }
+      `,
     }
 
-    fetch(url, {
-      method,
-      body: formData,
+    fetch(`${process.env.REACT_APP_API_URL}/graphql`, {
+      method: 'POST',
+      body: JSON.stringify(graphqlQuery),
       headers: {
         Authorization: 'Bearer ' + this.props.token,
+        'Content-Type': 'application/json',
       },
-      // headers: {
-      //   'Content-Type': 'application/json',
-      // },
-      // body: JSON.stringify({
-      //   title: postData.title,
-      //   content: postData.content,
-      // }),
     })
       .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Creating or editing a post failed!')
-        }
         return res.json()
       })
       .then(resData => {
+        if (resData.errors && resData.errors[0].status === 422) {
+          throw new Error('Validation failed')
+        }
+        if (resData.errors) {
+          throw new Error('Post creation failed')
+        }
+
         console.info(resData)
+
+        const postData = resData.data.createPost
         const post = {
-          _id: resData.post._id,
-          title: resData.post.title,
-          content: resData.post.content,
-          creator: resData.post.creator,
-          createdAt: resData.post.createdAt,
+          _id: postData._id,
+          title: postData.title,
+          content: postData.content,
+          creator: postData.creator,
+          createdAt: postData.createdAt,
         }
         this.setState(prevState => {
           let updatedPosts = [...prevState.posts]
