@@ -4,6 +4,7 @@ const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
+const helmet = require('helmet')
 
 //* IMPORT ROUTES
 const feedRoutes = require('./routes/feed')
@@ -30,6 +31,8 @@ const fileFilter = (req, file, cb) => {
 }
 
 //* MIDDLEWARE
+// HELMET
+app.use(helmet())
 // JSON PARSING
 app.use(express.json())
 // FILE UPLOADING
