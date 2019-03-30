@@ -155,15 +155,16 @@ class Feed extends Component {
     }
     fetch(`${process.env.REACT_APP_API_URL}/post-image`, {
       method: 'PUT',
+      body: formData,
       headers: {
         Authorization: 'Bearer ' + this.props.token,
       },
-      body: formData,
     })
       .then(res => res.json())
       .then(fileData => {
         const imageUrl = fileData.filePath
 
+        // Create a new post
         let graphqlQuery = {
           query: `
             mutation {
@@ -184,6 +185,31 @@ class Feed extends Component {
               }
             }
           `,
+        }
+
+        // Edit an existing post
+        if (this.state.editPost) {
+          graphqlQuery = {
+            query: `
+              mutation {
+                updatePost(id: "${this.state.editPost._id}", postInput: {
+                  title: "${postData.title}"
+                  content: "${postData.content}"
+                  imageUrl: "${imageUrl}"
+                })
+                {
+                  _id
+                  title
+                  content
+                  imageUrl
+                  creator {
+                    name
+                  }
+                  createdAt
+                }
+              }
+            `,
+          }
         }
 
         return fetch(`${process.env.REACT_APP_API_URL}/graphql`, {
@@ -208,7 +234,10 @@ class Feed extends Component {
 
         console.info(resData)
 
-        const postData = resData.data.createPost
+        const postData = this.state.editPost
+          ? resData.data.updatePost
+          : resData.data.createPost
+
         const post = {
           _id: postData._id,
           title: postData.title,
