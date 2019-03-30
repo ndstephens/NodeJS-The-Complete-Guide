@@ -73,6 +73,21 @@ exports.post = async ({ id }, req) => {
   }
 }
 
+//? GET LOGGED IN USER
+exports.user = async (args, req) => {
+  if (!req.isAuth) throwError('Not authenticated', 401)
+
+  const user = await User.findById(req.userId)
+  if (!user) throwError('No user found', 404)
+
+  return {
+    ...user._doc,
+    _id: user._id.toString(),
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
+  }
+}
+
 //
 
 //*--------------------------------------------------/
@@ -205,4 +220,23 @@ exports.deletePost = async ({ id }, req) => {
   await user.save()
 
   return true
+}
+
+//
+//? UPDATE STATUS (OF LOGGED IN USER)
+exports.updateStatus = async ({ status }, req) => {
+  if (!req.isAuth) throwError('Not authenticated', 401)
+
+  const user = await User.findById(req.userId)
+  if (!user) throwError('No user found', 404)
+
+  user.status = status
+  const updatedUser = await user.save()
+
+  return {
+    ...updatedUser._doc,
+    _id: updatedUser._id.toString(),
+    createdAt: updatedUser.createdAt.toISOString(),
+    updatedAt: updatedUser.updatedAt.toISOString(),
+  }
 }
