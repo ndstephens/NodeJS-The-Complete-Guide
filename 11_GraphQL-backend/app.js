@@ -5,6 +5,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
 const graphqlHttp = require('express-graphql')
+const helmet = require('helmet')
 
 const auth = require('./middleware/auth')
 const removeImage = require('./utils/remove-image')
@@ -35,6 +36,8 @@ const fileFilter = (req, file, cb) => {
 }
 
 //* MIDDLEWARE
+// HELMET
+app.use(helmet())
 // JSON PARSING
 app.use(express.json())
 // FILE UPLOADING
