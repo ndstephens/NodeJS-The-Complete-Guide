@@ -152,10 +152,10 @@ exports.createPost = async ({ postInput }, req) => {
 exports.updatePost = async ({ id, postInput }, req) => {
   if (!req.isAuth) throwError('Not authenticated', 401)
 
-  const post = await Post.findById(id).populate('creator')
+  const post = await Post.findById(id)
   if (!post) throwError('No post found', 404)
 
-  if (post.creator._id.toString() !== req.userId.toString()) {
+  if (post.creator.toString() !== req.userId.toString()) {
     throwError('Not authorized', 403)
   }
 
@@ -172,7 +172,7 @@ exports.updatePost = async ({ id, postInput }, req) => {
   post.title = title
   post.content = content
   if (imageUrl !== 'undefined') {
-    removeImage(post.imageUrl)
+    // old image removed in middleware in app.js
     post.imageUrl = imageUrl
   }
 
@@ -183,4 +183,26 @@ exports.updatePost = async ({ id, postInput }, req) => {
     createdAt: updatedPost.createdAt.toISOString(),
     updatedAt: updatedPost.updatedAt.toISOString(),
   }
+}
+
+//
+//? DELETE POST (BY ID)
+exports.deletePost = async ({ id }, req) => {
+  if (!req.isAuth) throwError('Not authenticated', 401)
+
+  const post = await Post.findById(id)
+  if (!post) throwError('No post found', 404)
+
+  if (post.creator.toString() !== req.userId.toString()) {
+    throwError('Not authorized', 403)
+  }
+
+  removeImage(post.imageUrl)
+  await Post.findByIdAndDelete(id)
+
+  const user = await User.findById(req.userId)
+  user.posts.pull(id)
+  await user.save()
+
+  return true
 }
