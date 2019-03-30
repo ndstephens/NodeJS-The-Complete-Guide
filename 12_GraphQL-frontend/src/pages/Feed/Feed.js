@@ -251,8 +251,6 @@ class Feed extends Component {
           throw new Error('Post creation failed')
         }
 
-        console.info(resData)
-
         const postData = this.state.editPost
           ? resData.data.updatePost
           : resData.data.createPost
