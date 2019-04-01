@@ -17,7 +17,7 @@ module.exports = buildSchema(`
     email: String!
     password: String
     status: String!
-    post: [Post!]!
+    posts: [Post!]!
   }
 
   type AuthData {
